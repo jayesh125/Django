@@ -1,0 +1,20 @@
+{% extends "main/basesign.html" %}
+
+{% block heading %} Verify Email{% endblock heading %}
+
+{% block form %}
+
+<form action="" method='POST'>
+    {% csrf_token %}
+    <h3><strong>Verify Email</strong></h3>
+    <div class="mb-3">
+        <label class="form-label">OTP</label>
+        <input class="form-control" name="otp_code" placeholder="Enter OTP">
+      </div>
+
+      <button class="btn btn-primary" style="width:100%">Activate Account</button>
+      <p>Need a new OTP? <a href="{% url 'resend-otp' %}">Resend OTP</a></p>
+
+</form>
+
+{% endblock form %}

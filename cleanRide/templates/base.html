@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="Untree.co">
+    <link rel="shortcut icon" href={% static "favicon.png" %}>
+
+    <meta name="description" content="" />
+    <meta name="keywords" content="bootstrap, bootstrap4" />
+
+    <!-- Bootstrap CSS -->
+    <link href={% static "css/bootstrap.min.css" %} rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href={% static "css/tiny-slider.css" %} rel="stylesheet">
+    <link href={% static "css/style.css" %} rel="stylesheet">
+
+    <!-- Include Bootstrap CSS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    
+    <title>{% block title %}{% endblock title %}</title>
+
+    <style>
+        
+    .bg-dark {
+        background-color: #3b5d50 !important; 
+    }
+
+    .custom-navbar {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+        transition: top 0.3s;
+    }
+
+    body {
+        padding-top: 50px; /* Adjust according to the height of your navbar */
+    }
+    
+    .rounded-circle {
+        border-radius: 100%;
+    }
+
+    {% block css %}{% endblock css %}
+</style>
+
+</head>
+{% block head %}{% endblock head %}
+
+<body>
+    {% block body %}{% endblock body %}
+    {% load static %}
+    <!-- Start Header/Navigation -->
+    <nav class="custom-navbar navbar navbar navbar-expand-md navbar-dark bg-dark" arial-label="Furni navigation bar">
+        
+        <div class="container">
+            <a class="navbar-brand" href={% url "index" %}>Clean<span>.</span>Ride</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsFurni"
+                aria-controls="navbarsFurni" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarsFurni">
+                <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
+                    <li class="nav-item ">
+                        <a class="nav-link" href={% url "index" %}>Home</a>
+                    </li>
+                    <li><a class="nav-link" href={% url "shop" %}>Shop</a></li>
+                    <li><a class="nav-link" href={% url "about" %}>About us</a></li>
+                    <li><a class="nav-link" href={% url "blog" %}>Blog</a></li>
+                    <li><a class="nav-link" href={% url "contact" %}>Contact us</a></li>
+                </ul>
+
+                <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
+                    {% if user.is_superuser %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dashboard' %}" id="dashboard" data-html="true" title="Dahsboard" data-content="Loading...">Dashboard</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'showcart' %}" id="cart" data-html="true" title="Cart" data-content="Loading..."><img src={% static 'images/cart.svg' %}></a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <div class="btn-group">
+                            <a class="nav-link " href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img src={% static "images/user.svg" %} class="rounded border border-warning" style="width: 30px; height: 30px;">
+                            </a>
+                            <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <div class="dropdown-menu">
+                                {% if user.is_authenticated %}
+                                    <a class="dropdown-item disabled" href="#">Welcome,{{request.user.username|capfirst}}!</a>
+                                    <a class="dropdown-item" href={% url "profile" %}>Profile</a>
+                                    <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                                    <a class="dropdown-item" href="{% url 'orders' %}">Orders</a>
+                                    {% comment %} <li><a class="dropdown-item" href="{% url 'passwordchange' %}">Change Password</a></li> {% endcomment %}
+                                {% else %}
+                                    <a class="dropdown-item" href="{% url 'login' %}">Login</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </li>                    
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- End Header/Navigation -->
+
+    {% block heroSection %}
+    <!-- Start Hero Section -->
+    <div class="hero">
+        <div class="container">
+            <div class="row justify-content-between">
+                <div class="col-lg-5">
+                    <div class="intro-excerpt">
+                        <h2 class="h2 text-white" style="margin-top:85px;"> Expert Solutions <small> for </small> <strong><br>Car Enthusiasts</strong><span clsas="d-block"></span></h2>
+                        <p><a href={% url "shop" %} class="btn btn-secondary me-2">Shop Now</a>
+                            <a href={% url "product_catalog" %} class="btn btn-white-outline">Explore </a>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div class="hero-img-wrap">
+                        <img src={% static "images/carwashHome.png" %} class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Hero Section -->
+    {% endblock heroSection %}
+
+    {% block categories %}
+        <!-- Start Product Section -->
+		<div class="product-section">
+			<div class="container">
+				<div class="row">
+
+					<!-- Start Column 1 -->
+					<div class="col-md-12 col-lg-3 mb-5 mb-lg-0">
+						<h2 class="mb-4 section-title">Created with excellent material.</h2>
+						<p><a href="{% url 'product_catalog' %}" class="btn">Explore</a></p>
+					</div> 
+					<!-- End Column 1 -->
+
+					<!-- Start Column 2 -->
+					<div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
+						<a class="product-item" href={% url "product_catalog" %}>
+							<img src={% static "images/exteriorcarwash.png"%} class="img-fluid product-thumbnail">
+							<h3 class="product-title">Exterior Products</h3>
+							<strong class="product-price"></strong>
+
+							<span class="icon-cross">
+								<img src={% static "images/cross.svg"%} class="img-fluid">
+							</span>
+						</a>
+					</div> 
+					<!-- End Column 2 -->
+
+					<!-- Start Column 3 -->
+					<div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
+						<a class="product-item" href={% url "product_catalog" %}>
+							<img src={% static "images/interiorcarwash.png"%} class="img-fluid product-thumbnail">
+							<h3 class="product-title">Interior Products</h3>
+							<strong class="product-price"></strong>
+
+							<span class="icon-cross">
+								<img src={% static "images/cross.svg"%} class="img-fluid">
+							</span>
+						</a>
+					</div>
+					<!-- End Column 3 -->
+
+					<!-- Start Column 4 -->
+					<div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
+						<a class="product-item" href={% url "product_catalog" %}>
+							<img src={% static "images/combo_category.jpg"%} class="img-fluid product-thumbnail">
+							<h3 class="product-title">Combo Products</h3>
+							<strong class="product-price"></strong>
+
+							<span class="icon-cross">
+                                <img src={% static "images/cross.svg"%} class="img-fluid">
+							</span>
+						</a>
+					</div>
+					<!-- End Column 4 -->
+
+				</div>
+			</div>
+		</div>
+		<!-- End Product Section -->
+    {% endblock categories %}
+
+    {% block productSection %} {% endblock productSection %}
+
+    {% block WhyChooseUs %}
+    
+        <!-- Start Why Choose Us Section -->
+		<div class="why-choose-section">
+			<div class="container">
+				<div class="row justify-content-between">
+					<div class="col-lg-6">
+						<h2 class="section-title">Why Choose Us</h2>
+						<p>Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate velit imperdiet dolor tempor tristique.</p>
+
+						<div class="row my-5">
+							<div class="col-6 col-md-6">
+								<div class="feature">
+									<div class="icon">
+										<img src={% static "images/truck.svg"%} alt="Image" class="imf-fluid">
+									</div>
+									<h3>Fast &amp; Free Shipping</h3>
+									<p>Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate.</p>
+								</div>
+							</div>
+
+							<div class="col-6 col-md-6">
+								<div class="feature">
+									<div class="icon">
+										<img src={% static "images/bag.svg"%} alt="Image" class="imf-fluid">
+									</div>
+									<h3>Easy to Shop</h3>
+									<p>Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate.</p>
+								</div>
+							</div>
+
+							<div class="col-6 col-md-6">
+								<div class="feature">
+									<div class="icon">
+										<img src={% static "images/support.svg"%} alt="Image" class="imf-fluid">
+									</div>
+									<h3>24/7 Support</h3>
+									<p>Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate.</p>
+								</div>
+							</div>
+
+							<div class="col-6 col-md-6">
+								<div class="feature">
+									<div class="icon">
+										<img src={% static "images/return.svg"%} alt="Image" class="imf-fluid">
+									</div>
+									<h3>Hassle Free Returns</h3>
+									<p>Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate.</p>
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+					<div class="col-lg-5">
+						<div class="img-wrap">
+							<img src={% static "images/whychooseus.jpg"%} alt="Image" class="img-fluid" style="height: 500px;">
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<!-- End Why Choose Us Section -->
+    
+    {% endblock WhyChooseUs %}
+
+
+    {% block popularProduct %}
+    
+        <!-- Start Popular Product -->
+		<div class="popular-product">
+			<div class="container">
+				<div class="row">
+
+					<div class="col-12 col-md-6 col-lg-4 mb-4 mb-lg-0">
+						<div class="product-item-sm d-flex">
+							<div class="thumbnail">
+								<img src={% static "images/interiorcarwash.png"%} alt="Image" class="img-fluid">
+							</div>
+							<div class="pt-3">
+								<h3>Interior Products</h3>
+								<p>Donec facilisis quam ut purus rutrum lobortis. Donec vitae odio </p>
+								<p><a href={% url "product_catalog"%}>View All</a></p>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-12 col-md-6 col-lg-4 mb-4 mb-lg-0">
+						<div class="product-item-sm d-flex">
+							<div class="thumbnail">
+								<img src={% static "images/exteriorcarwash.png"%} alt="Image" class="img-fluid">
+							</div>
+							<div class="pt-3">
+								<h3>Exterior Products</h3>
+								<p>Donec facilisis quam ut purus rutrum lobortis. Donec vitae odio </p>
+								<p><a href={% url "product_catalog"%}>View All</a></p>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-12 col-md-6 col-lg-4 mb-4 mb-lg-0">
+						<div class="product-item-sm d-flex">
+							<div class="thumbnail">
+								<img src={% static "images/combo_category.jpg"%} alt="Image" class="img-fluid">
+							</div>
+							<div class="pt-3">
+								<h3>Combo Products</h3>
+								<p>Donec facilisis quam ut purus rutrum lobortis. Donec vitae odio </p>
+								<p><a href={% url "product_catalog"%}>View All</a></p>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<!-- End Popular Product -->
+    
+    {% endblock popularProduct %}
+
+    {% block testimonial %}
+        <!-- Start Testimonial Slider -->
+        <div class="testimonial-section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-7 mx-auto text-center">
+                        <h2 class="section-title">Testimonials</h2>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-lg-12">
+                        <div class="testimonial-slider-wrap text-center">
+
+                            <div id="testimonial-nav">
+                                <span class="prev" data-controls="prev"><span class="fa fa-chevron-left"></span></span>
+                                <span class="next" data-controls="next"><span class="fa fa-chevron-right"></span></span>
+                            </div>
+
+                            <div class="testimonial-slider">
+
+                                <div class="item">
+                                    <div class="row justify-content-center">
+                                        <div class="col-lg-8 mx-auto">
+
+                                            <div class="testimonial-block text-center">
+                                                <blockquote class="mb-5">
+                                                    <p>&ldquo;Donec facilisis quam ut purus rutrum lobortis. Donec vitae
+                                                        odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam
+                                                        vulputate velit imperdiet dolor tempor tristique. Pellentesque
+                                                        habitant morbi tristique senectus et netus et malesuada fames ac
+                                                        turpis egestas. Integer convallis volutpat dui quis
+                                                        scelerisque.&rdquo;</p>
+                                                </blockquote>
+
+                                                <div class="author-info">
+                                                    <div class="author-pic">
+                                                        <img src={% static "images/person-1.png" %} alt="Maria Jones"
+                                                            class="img-fluid">
+                                                    </div>
+                                                    <h3 class="font-weight-bold">Maria Jones</h3>
+                                                    <span class="position d-block mb-3">CEO, Co-Founder, XYZ Inc.</span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- END item -->
+
+                                <div class="item">
+                                    <div class="row justify-content-center">
+                                        <div class="col-lg-8 mx-auto">
+
+                                            <div class="testimonial-block text-center">
+                                                <blockquote class="mb-5">
+                                                    <p>&ldquo;Donec facilisis quam ut purus rutrum lobortis. Donec vitae
+                                                        odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam
+                                                        vulputate velit imperdiet dolor tempor tristique. Pellentesque
+                                                        habitant morbi tristique senectus et netus et malesuada fames ac
+                                                        turpis egestas. Integer convallis volutpat dui quis
+                                                        scelerisque.&rdquo;</p>
+                                                </blockquote>
+
+                                                <div class="author-info">
+                                                    <div class="author-pic">
+                                                        <img src={% static "images/person-1.png" %} alt="Maria Jones"
+                                                            class="img-fluid">
+                                                    </div>
+                                                    <h3 class="font-weight-bold">Maria Jones</h3>
+                                                    <span class="position d-block mb-3">CEO, Co-Founder, XYZ Inc.</span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- END item -->
+
+                                <div class="item">
+                                    <div class="row justify-content-center">
+                                        <div class="col-lg-8 mx-auto">
+
+                                            <div class="testimonial-block text-center">
+                                                <blockquote class="mb-5">
+                                                    <p>&ldquo;Donec facilisis quam ut purus rutrum lobortis. Donec vitae
+                                                        odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam
+                                                        vulputate velit imperdiet dolor tempor tristique. Pellentesque
+                                                        habitant morbi tristique senectus et netus et malesuada fames ac
+                                                        turpis egestas. Integer convallis volutpat dui quis
+                                                        scelerisque.&rdquo;</p>
+                                                </blockquote>
+
+                                                <div class="author-info">
+                                                    <div class="author-pic">
+                                                        <img src={% static "images/person-1.png" %} alt="Maria Jones"
+                                                            class="img-fluid">
+                                                    </div>
+                                                    <h3 class="font-weight-bold">Maria Jones</h3>
+                                                    <span class="position d-block mb-3">CEO, Co-Founder, XYZ Inc.</span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- END item -->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Testimonial Slider -->
+    {% endblock testimonial %}
+
+    {% block blogSection %}
+        <!-- Start Blog Section -->
+
+        <div class="blog-section">
+            <div class="container mt-0">
+                <div class="row">
+                    {% for post in posts %}
+                    <div class="col-12 col-sm-6 col-md-4 mb-4 mb-md-0">
+                        <div class="post-entry">
+                            <a href={% url "blog" %} class="post-thumbnail">
+                                <img src="{{ post.image.url }}" alt="Image" class="img-fluid">
+                            </a>
+                            <div class="post-content-entry">
+                                <h3><a href="#">{{ post.title }}</a></h3>
+                                <div class="meta">
+                                    <span>by <a href="#">{{ post.author }}</a></span> 
+                                    <span>on <a href="#">{{ post.date_posted }}</a></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <!-- End Blog Section -->
+    {% endblock blogSection %}
+
+    {% block footer %}
+    <!-- Start Footer Section -->
+    <footer class="footer-section">
+        <div class="container relative">
+
+            <div class="sofa-img">
+                <img src={% static "images/carwashHome.png" %} alt="Image" class="img-fluid">
+            </div>
+
+            <div class="row g-5 mb-5">
+                <div class="col-lg-4">
+                    <div class="mb-4 footer-logo-wrap"><a href={% url "index" %} class="footer-logo">Clean.Ride<span></span></a></div>
+                    <p class="mb-4">Elevate your car washing experience with a curated selection of high-quality products at Clean Ride – where cleanliness meets excellence.</p>
+
+                    <ul class="list-unstyled custom-social">
+                        <li><a href="#"><span class="fa fa-brands fa-facebook-f"></span></a></li>
+                        <li><a href="#"><span class="fa fa-brands fa-twitter"></span></a></li>
+                        <li><a href="#"><span class="fa fa-brands fa-instagram"></span></a></li>
+                        <li><a href="#"><span class="fa fa-brands fa-linkedin"></span></a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-8">
+                    <div class="row links-wrap">
+                        <div class="col-6 col-sm-6 col-md-3">
+                            <ul class="list-unstyled">
+                                <li><a href="#">About us</a></li>
+                                <li><a href={% url "blog" %}>Blog</a></li>
+                                <li><a href={% url "contact" %}>Contact us</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="col-6 col-sm-6 col-md-3">
+                            <ul class="list-unstyled">
+                                <li><a href="#">Support</a></li>
+                                <li><a href="#">Knowledge base</a></li>
+                                <li><a href="#">Live chat</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="col-6 col-sm-6 col-md-3">
+                            <ul class="list-unstyled">
+                                <li><a href="#">Jobs</a></li>
+                                <li><a href="#">Our team</a></li>
+                                <li><a href="#">Leadership</a></li>
+                                <li><a href="#">Privacy Policy</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="col-6 col-sm-6 col-md-3">
+                            <ul class="list-unstyled">
+                                <li><a href={% url "product_catalog" %}>Exterior Products</a></li>
+                                <li><a href={% url "product_catalog" %}>Interior Products</a></li>
+                                <li><a href={% url "product_catalog" %}>Combo Products</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="border-top copyright">
+                <div class="row pt-4">
+                    <div class="col-lg-6">
+                        <p class="mb-2 text-center text-lg-start">Copyright &copy;
+                            <script>document.write(new Date().getFullYear());</script>. All Rights Reserved. &mdash;
+                            Designed <a href="">Sonali Patil</a>
+                        </p>
+                    </div>
+
+                    <div class="col-lg-6 text-center text-lg-end">
+                        <ul class="list-unstyled d-inline-flex ms-auto">
+                            <li class="me-4"><a href="#">Terms &amp; Conditions</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </footer>
+    <!-- End Footer Section -->
+    {% endblock footer %}
+
+    <script src={% static "js/bootstrap.bundle.min.js" %}></script>
+    <script src={% static "js/tiny-slider.js" %}></script>
+    <script src={% static "js/custom.js" %}></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <script src="https://www.paypal.com/sdk/js?client-id=AROnv-zs7LL3fd-Jw3MoY5lVuQN75822bolahcmw7MycRdi896CprhDTtJhWekXe6aepSuYAJ4jxaY3V&currency=USD"></script>
+
+
+    <script>
+        {% block js %}{% endblock js %}
+    </script>
+
+    {% block link_js %}{% endblock link_js %}
+    
+</body>
+
+</html>

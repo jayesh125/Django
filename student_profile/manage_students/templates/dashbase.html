@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock title %}</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
+
+    <style>
+        body {
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        #sidebar {
+            display: flex;
+            flex-direction: column;
+            min-width: 250px;
+            max-width: 250px;
+            transition: all 0.3s;
+            background-color: #001021;
+        }
+        #sidebar.collapsed {
+            min-width: 80px;
+            max-width: 80px;
+        }
+        #sidebar .sidebar-header,
+        #sidebar .footer {
+            text-align: center;
+            flex-shrink: 0;
+        }
+        #sidebar .sidebar-links {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+        #sidebar .sidebar-links .nav-link {
+            white-space: nowrap;
+        }
+        #sidebar.collapsed .nav-link span {
+            display: none;
+        }
+        #sidebar.collapsed .h2 span {
+            display: none;
+        }
+        #sidebar.collapsed .nav-link i {
+            margin-right: 0;
+        }
+        #content-wrapper {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+        #content {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+            transition: margin-left 0.3s;
+        }
+        #sidebar.collapsed + #content-wrapper #content {
+            margin-left: 80px;
+        }
+        .toggle-btn {
+            position: absolute;
+            top: 50px;
+            left: 230px;
+            z-index: 2000;
+            padding: 0.5rem;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+            border-width: 2px;
+            border-style: solid;
+            border-color: dark;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        #sidebar.collapsed ~ .toggle-btn {
+            left: 60px;
+            transform: rotate(180deg);
+        }
+        .navbar-light {
+            background-color: #001021;
+        }
+        
+        /* Button styling */
+        .btn-primary {
+            background: #03045E;
+            border-color: #287328; /* Button border color */
+        }
+        .btn:hover{
+            color: black;
+        }
+        .btn-primary:hover {
+            background: #EDF6F9;
+            text-color: black;
+        }
+        .btn-danger{
+            background: rgb(195,34,34);
+            background: radial-gradient(circle, rgba(195,34,34,1) 0%, rgba(166,11,11,1) 100%);
+            border-color: #ffffff;
+        }
+        .btn-danger:hover {
+            background: rgb(195,34,34);
+            background: radial-gradient(circle, rgba(195,34,34,1) 0%, rgba(255,0,0,1) 100%);
+            border-color: #ffffff; /* Button hover border color */
+        }
+    </style>
+    {% block css %}{% endblock css %}
+</head>
+<body>
+    {% load static %}
+    <div id="sidebar" class="text-white">
+        <div class="sidebar-header py-3">
+            <img src="{% static 'imrt.png' %}" id="logo" class="img-fluid bg-light" alt="" style="height: 80px; width: 80px;">
+            <h4 class="h2"><span>I.M.R.T</span></h4>
+        </div>
+        <div class="sidebar-links">
+            <nav class="nav flex-column">
+                <li class="sidebar-item">
+                    <a href={% url "dashboard_home" %} class="nav-link text-white h5">
+                        <i class="lni lni-home"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item">
+                    <a href="{% url 'form_view' tab='personal' %}" class="nav-link text-white h5">
+                        <i class="lni lni-user"></i>
+                        <span>Edit Profile</span>
+                    </a>
+                </li>
+            
+                <li class="sidebar-item">
+                    <a href="#task-section" class="nav-link text-white h5">
+                        <i class="lni lni-agenda"></i>
+                        <span>Task</span>
+                    </a>
+                </li>
+            
+                <li class="sidebar-item">
+                    <a href={% url "view_notifications" %} class="nav-link text-white h5">
+                        <i class="lni lni-popup"></i>
+                        <span>Notification</span>
+                    </a>
+                </li>
+                
+                <li class="sidebar-item">
+                    <a href="#setting-section" class="nav-link text-white h5">
+                        <i class="lni lni-cog"></i>
+                        <span>Setting</span>
+                    </a>
+                </li>
+
+                
+                {% block sidebarItems %}{% endblock sidebarItems %}
+            </nav>
+        </div>
+        <div class="footer mt-auto py-3">
+            <small>&copy; 2024 I.M.R.T</small>
+        </div>
+    </div>
+
+    <button id="toggle-btn" class="toggle-btn"><img src="{% static 'caret-right-square-fill.svg' %}" alt=""></button>
+
+    <div id="content-wrapper">
+        <!--navbar-->
+        <nav class="navbar navbar-expand-lg navbar-light mb-4 sticky-top">
+            <a class="navbar-brand text-white" href="#">Dashboard</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                <ul class="navbar-nav mr-auto mt-2 mt-lg-0"></ul>
+                <div class="btn-group dropdown">
+                    <button type="button" class="btn border-light border-2">
+                        <a href="#">
+                            {% if personal_info.profile_picture %}
+                                <img src="{{ personal_info.profile_picture.url }}" alt="Profile Picture" class="rounded-circle" style="width: 35px; height: 35px;">
+                            {% else %}
+                                <img src="{% static 'profile.png' %}" alt="Default Profile Picture" class="rounded-circle" style="width: 35px; height: 35px;">
+                            {% endif %}
+                            <span class="d-none d-lg-inline text-white mx-2">Welcome, {{user.username}}</span>
+                        </a>
+                    </button>
+                    <button type="button" class="btn bg-light dropdown-toggle dropdown-toggle-split border-light border-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <div class="dropdown-menu alert-primary">
+                        <a class="dropdown-item" href="#">Profile</a>
+                        <a class="dropdown-item" href="#">Settings</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href={% url "logout" %}>Logout</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div id="content">
+            {% block maincontent %}{% endblock maincontent %}
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    <script>
+        $(document).ready(function () {
+            $('#toggle-btn').on('click', function () {
+                $('#sidebar').toggleClass('collapsed');
+                $('#content').toggleClass('ml-auto');
+                $(this).toggleClass('collapsed');
+            });
+        });
+    </script>
+    {% block js %}{% endblock js %}
+</body>
+</html>

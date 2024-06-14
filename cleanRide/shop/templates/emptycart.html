@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Empty Cart{% endblock title %}
+{% block body %}
+{% load static %}
+ <div class="container my-5">
+  <div class="row">
+   <h3 class="text-center">You have no Product in Your Cart</h3>
+   <div class="text-center">
+    <img src="{% static 'images/emptycart.png' %}" alt="" class="img-fluid img-thumbnail w-25">
+   </div>
+  </div>
+ </div>
+{% endblock body %}
+
+{% block heroSection %}{% endblock heroSection %}
+
+{% block WhyChooseUs %}{% endblock WhyChooseUs %}
+
+{% block HelpSection %}{% endblock HelpSection %}
+
+{% block productSection %}{% endblock productSection %}
+
+{% block popularProduct %}{% endblock popularProduct %}
+
+{% block blogSection %}{% endblock blogSection %}

@@ -1,0 +1,20 @@
+{% extends "dashbase.html" %}
+
+{% block head %}
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+{% endblock head %}
+
+{% block main %}
+<div class="container mt-4">
+    <h1>{{ post.title }}</h1>
+    <p><strong>By:</strong> {{ post.author }}</p>
+    <p><strong>Posted on:</strong> {{ post.date_posted }}</p>
+    <img src="{{ post.image.url }}" class="img-fluid" alt="Image">
+    <p>{{ post.content }}</p>
+    <a href="{% url 'blog_edit' post.id %}" class="btn btn-secondary"><i class="bi bi-pencil-fill"></i> Edit</a>
+    <a href="{% url 'blog_list' %}" class="btn btn-secondary mt-3"><i class="bi bi-arrow-left-circle-fill"></i> Back to List</a>
+</div>
+{% endblock main %}

@@ -1,0 +1,83 @@
+{% extends "dashbaseadmin.html" %}
+
+{% block css %}
+<style>
+    /* General table styling */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    /* Table header styling */
+    th, td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    /* Table header background and text color */
+    th {
+        background-color: #f4f4f4;
+        color: #333;
+    }
+
+    /* Table row hover effect */
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    /* Alternate row colors */
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    /* Table cell text color */
+    td {
+        color: #555;
+    }
+
+    /* Styling for images within table cells */
+    td img {
+        max-width: 100px;
+        height: auto;
+        display: block;
+    }
+
+    /* Table link styling */
+    td a {
+        color: #1a73e8;
+        text-decoration: none;
+    }
+
+    td a:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock css %}
+
+{% block maincontent %}
+
+  <h2>Verify Faculty</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Verification Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for fac in faculty %}
+        <tr>
+          <td>{{ fac.username }}</td>
+          <td>{{ fac.email }}</td>
+          <td>{{ fac.verification_status }}</td>
+          <td><a href="{% url 'faculty_detail' fac.pk %}">View Details</a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock maincontent %}

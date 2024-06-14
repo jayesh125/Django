@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Profile{% endblock title %}
+{% block body %}
+<div class="container my-5">
+ <div class="row">
+  <h3>Welcome <span class="text-capitalize">{{request.user}}</span> </h3>
+  <div class="col-sm-2 border-end">
+   <ul class="list-unstyled">
+    <li class="d-grid pb-1"><a href="{% url 'profile' %}" class="btn {{active}}">Profile</a></li>
+    <li class="d-grid pb-1"><a href="{% url 'address' %}" class="btn">Address</a></li>
+   </ul>
+  </div>
+  <div class="col-sm-8 offset-sm-1">
+   <form action="" method="post" novalidate>
+     {% csrf_token %}
+     {% for fm in form %}
+      <div class="form-group col-lg-6 mb-3">
+      {{fm.label_tag}} {{fm}} <small class="text-danger">{{fm.errors|striptags}}</small>
+      </div>
+     {% endfor %}
+    <div class="col-12 mt-3">
+      <button type="submit" class="btn btn-primary mb-3">Submit</button>
+    </div>
+   </form>
+   {% if messages %}
+    {% for message in messages %}
+     <p {% if message.tags %} class="alert alert-{{message.tags}} mb-5" {% endif %}>{{message}}}</p>
+    {% endfor %}
+    {% endif %}
+  </div>
+ </div>
+</div>
+{% endblock body %}
+
+
+{% block heroSection %}{% endblock heroSection %}
+
+{% block WhyChooseUs %}{% endblock WhyChooseUs %}
+
+{% block HelpSection %}{% endblock HelpSection %}
+
+{% block productSection %}{% endblock productSection %}
+
+{% block popularProduct %}{% endblock popularProduct %}

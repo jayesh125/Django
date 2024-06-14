@@ -1,0 +1,87 @@
+{% extends 'dashbase.html' %}
+{% load static %}
+{% block title %}Admin Analytics{% endblock title %}
+{% block main %}
+<div class="container my-5">
+    <h2 class="mb-4">Admin Analytics and Reporting</h2>
+    <div class="row">
+        <div class="col-md-3">
+            <!-- Sidebar for filters -->
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Filters</h4>
+                    <form method="GET" action="{% url 'admin_analytics' %}">
+                        <div class="mb-3">
+                            <label for="date_range" class="form-label">Date Range:</label>
+                            <input type="date" id="start_date" name="start_date" class="form-control">
+                            <input type="date" id="end_date" name="end_date" class="form-control mt-2">
+                        </div>
+                        <div class="mb-3">
+                            <label for="category" class="form-label">Category:</label>
+                            <select id="category" name="category" class="form-select">
+                                <option value="">-- Select Category --</option>
+                                {% for category in categories %}
+                                <option value="{{ category.id }}">{{ category.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Apply Filters</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <!-- Analytics and Reporting -->
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h4 class="card-title">Sales Overview</h4>
+                    <canvas id="salesChart"></canvas>
+                </div>
+            </div>
+            <div class="card mt-4 bg-light">
+                <div class="card-body">
+                    <h4 class="card-title">User Metrics</h4>
+                    <canvas id="userChart"></canvas>
+                </div>
+            </div>
+            <div class="card mt-4 bg-light">
+                <div class="card-body">
+                    <h4 class="card-title">Product Performance</h4>
+                    <canvas id="productChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main %}
+
+{% block js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var salesData = {{ sales_data|safe }};
+        var userData = {{ user_data|safe }};
+        var productData = {{ product_data|safe }};
+        
+        var ctxSales = document.getElementById('salesChart').getContext('2d');
+        var salesChart = new Chart(ctxSales, {
+            type: 'line',
+            data: salesData,
+            options: {}
+        });
+
+        var ctxUser = document.getElementById('userChart').getContext('2d');
+        var userChart = new Chart(ctxUser, {
+            type: 'bar',
+            data: userData,
+            options: {}
+        });
+
+        var ctxProduct = document.getElementById('productChart').getContext('2d');
+        var productChart = new Chart(ctxProduct, {
+            type: 'pie',
+            data: productData,
+            options: {}
+        });
+    });
+</script>
+{% endblock js %}

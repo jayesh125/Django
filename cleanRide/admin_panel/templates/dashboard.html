@@ -1,0 +1,326 @@
+{% extends "dashbase.html" %}
+
+{% block title %}Dashboard{% endblock title %}
+
+{% block css %}
+<style>
+    .top-products-container {
+        gap: 20px;
+    }
+
+    .top-product-card {
+        width: calc(33.33% - 20px); /* 33.33% width for each card with 20px gap */
+    }
+
+    .subtitle-container {
+        display: flex; /* Use flexbox layout */
+        align-items: center; /* Align items vertically */
+        margin-bottom: 0px;
+    }
+
+    .card {
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+
+    .card h1, .card h3 {
+        margin: 0;
+    }
+
+    .top-products-container img {
+        border-radius: 8px;
+    }
+
+    .top-product-card .badge {
+        font-size: 0.8rem;
+    }
+
+    .card-chart {
+        position: relative;
+        height: 400px; /* Fixed height for the chart container */
+    }
+
+    canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+    }
+
+    .table th, .table td {
+        vertical-align: middle;
+    }
+
+    .table img {
+        border-radius: 4px;
+    }
+
+    .badge-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+</style>
+{% endblock css %}
+
+{% block main %}
+{% load static %}
+
+<div class="container">
+    <div class="row">
+        <!-- Total Orders Card -->
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">Total Orders</h3>
+                    <h1 class="card-subtitle mb-2">{{ total_orders }}</h1>
+                    <form action="{% url 'orders_admin' %}">
+                        <button class="btn btn-primary">View Orders</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Sales Card -->
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">Total Sales</h3>
+                    <div class="subtitle-container">
+                        <img src="{% static 'dash/Rupee-Symbol-Black.svg' %}" alt="" style="height: 30px;">
+                        <h1 class="card-subtitle mb-2">{{ total_sales }}</h1>
+                    </div>
+                    <button class="btn btn-primary">
+                        <a href={% url "admin_analytics" %} class="card-link">View Sales</a>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Products Card -->
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">Top Products</h3>
+                    <div class="top-products-container d-flex justify-content-center">
+                        {% for product in top_products %}
+                        <div class="card top-product-card position-relative">
+                            <img src="{{ product.product_image.url }}" class="card img-fluid" alt="{{ product.title }}" style="height: 90px; width:100px;" title="Bought {{ product.num_orders }} times">
+                            <span class="badge badge-success badge-pill position-absolute top-0 start-100 translate-middle" data-toggle="tooltip" data-placement="top">{{ product.num_orders }}</span>
+                        </div>
+                        {% endfor %}
+                        <form action="{% url 'products' %}">
+                            <button class="btn btn-primary">All Products</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Sales Chart Card -->
+        <div class="col-md-6 mb-4 mt-2">
+            <h3 class="card-title">Sales Over Time</h3>
+            <div class="card card-chart">
+                <div class="card-body">
+                    <canvas id="salesChart" style="height:300px;"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customer Growth Chart Card -->
+        <div class="col-md-6 mb-4 mt-2">
+            <h3 class="card-title">Customer Growth</h3>
+            <div class="card card-chart">
+                <div class="card-body">
+                    <canvas id="customerGrowthChart" style="height:300px;"></canvas>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="row">
+        <!-- Pending Orders Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">Pending Orders</h3>
+                    <h1 class="card-subtitle mb-2">{{ pending_orders }}</h1>
+                    <button class="btn btn-primary">View Pending Orders</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- All Products and Their Order Counts Card -->
+    <div class="col-md-12 mb-4 mt-2">
+        <div class="card">
+            <h3 class="card-title">All Products</h3>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Image</th>
+                            <th>Orders</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in all_products %}
+                        <tr>
+                            <td>
+                                <i class="fas fa-box"></i>
+                                {{ product.title|truncatechars:20 }}
+                            </td>
+                            <td>
+                                <img src="{{ product.product_image.url }}" alt="{{ product.title }}" style="height: 50px; width: auto;">
+                            </td>
+                            <td>
+                                <span class="badge badge-success">{{ product.num_orders }}</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Order List Table -->
+        <div class="col-md-12 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">Order List</h3>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Order ID</th>
+                                    <th scope="col">User</th>
+                                    <th scope="col">Customer</th>
+                                    <th scope="col">Product</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">Ordered Date</th>
+                                    <th scope="col">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in orders %}
+                                <tr>
+                                    <td><i class="fas fa-hashtag"></i> {{ order.id }}</td>
+                                    <td><i class="fas fa-user"></i> {{ order.user }}</td>
+                                    <td><i class="fas fa-user-tag"></i> {{ order.customer }}</td>
+                                    <td><i class="fas fa-box"></i> {{ order.product }}</td>
+                                    <td><i class="fas fa-sort-numeric-up-alt"></i> {{ order.quantity }}</td>
+                                    <td><i class="fas fa-calendar-alt"></i> {{ order.ordered_date }}</td>
+                                    <td>
+                                        {% if order.status == 'Accepted' %}
+                                        <span class="badge badge-success" data-toggle="tooltip" data-placement="top" title="Order is accepted">{{ order.status }}</span>
+                                        {% elif order.status == 'Pending' %}
+                                        <span class="badge badge-warning" data-toggle="tooltip" data-placement="top" title="Order is pending">{{ order.status }}</span>
+                                        {% elif order.status == 'Rejected' %}
+                                        <span class="badge badge-danger" data-toggle="tooltip" data-placement="top" title="Order is rejected">{{ order.status }}</span>
+                                        {% else %}
+                                        <span class="badge badge-secondary">{{ order.status }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+{% endblock main %}
+
+{% block js %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Sales Chart Data
+        var labels = {{ labels|safe }};
+        var sales = {{ sales|safe }};
+
+        var salesCtx = document.getElementById('salesChart').getContext('2d');
+        var salesChart = new Chart(salesCtx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Total Sales',
+                    data: sales,
+                    fill: false,
+                    lineTension: 0.1,
+                    borderColor: '#4CAF50',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#4CAF50',
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) { return '$' + value; }
+                        }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                },
+                plugins: {
+                    legend: { display: true, position: 'bottom' },
+                    tooltip: { bodyFont: { size: 14 } }
+                }
+            }
+        });
+
+        // Customer Growth Chart Data
+        var customerLabels = {{ customer_labels|safe }};
+        var customerGrowthData = {{ customer_growth|safe }};
+        
+        var customerGrowthCtx = document.getElementById('customerGrowthChart').getContext('2d');
+        var customerGrowthChart = new Chart(customerGrowthCtx, {
+            type: 'bar',
+            data: {
+                labels: customerLabels,
+                datasets: [{
+                    label: 'New Customers',
+                    data: customerGrowthData,
+                    backgroundColor: '#007bff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: '#ddd'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock js %}

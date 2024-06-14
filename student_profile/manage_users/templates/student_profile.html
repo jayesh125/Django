@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ student.username }}'s Profile</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+
+    <!-- Add Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #90BF84, #C1ECB8);
+            color: #343a40;
+            overflow-x: hidden;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .profile-picture {
+            height: 150px;
+            width: 150px;
+            border-radius: 80%;
+            margin-bottom: 10px;
+        }
+        .section-title {
+            margin-top: 40px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #343a40;
+            padding-bottom: 10px;
+        }
+        .certificate {
+            height: 100px;
+            width: auto;
+            margin-top: 10px;
+        }
+        #navbar-example3 {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 250px;
+            background-color: #f8f9fa;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        #main-content {
+            margin-left: 270px;
+            padding: 20px;
+        }
+        .nav-link {
+            color: #343a40;
+            font-weight: bold;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #90BF84;
+            color: #fff;
+        }
+        .back-button {
+            margin-bottom: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h2 {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body data-spy="scroll" data-target="#navbar-example3" data-offset="0">
+    <nav id="navbar-example3" class="navbar navbar-light bg-light">
+        <div class="back-button">
+            <button onclick="window.history.back();" class="btn btn-primary btn-block">Back</button>
+        </div>
+        <div class="header">
+            <img src="{{ personal_info.profile_picture.url }}" alt="Profile Picture" class="profile-picture animate__animated animate__fadeIn">
+            <h2>{{ student.first_name }} {{ student.last_name }}</h2>
+
+            <h6><a href="https://wa.me/{{personal_info.phone_number}}" class="text-success"><i class="bi bi-whatsapp"></i> WhatsApp Me!</a></h6>
+            
+            <h6><a href="mailto:{{ student.email }}" class="text-danger"><i class="bi bi-envelope-paper-fill"></i> Send Email</a></h6>
+            
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        
+        </div>
+        <nav class="nav nav-pills flex-column">
+            <a class="nav-link" href="#personal-info">Personal Information</a>
+            <a class="nav-link" href="#college-info">College Information</a>
+            <a class="nav-link" href="#education-info">Education Information</a>
+            <a class="nav-link" href="#documents">Documents</a>
+            <a class="nav-link" href="#experiences">Experiences</a>
+            <a class="nav-link" href="#projects">Projects</a>
+            <a class="nav-link" href="#skills">Skills</a>
+            <a class="nav-link" href="#achievements">Achievements</a>
+            <a class="nav-link" href="#interests">Interests</a>
+            <a class="nav-link" href="#languages">Languages</a>
+        </nav>
+    </nav>
+
+    <div id="main-content" class="container">
+        <h2 id="personal-info" class="section-title">Personal Information</h2>
+        <p>Date of Birth: {{ personal_info.date_of_birth }}</p>
+        <p>Gender: {{ personal_info.get_gender_display }}</p>
+        <p>Phone Number: {{ personal_info.phone_number }}</p>
+        <p>Address: {{ personal_info.address }}</p>
+
+        <h2 id="college-info" class="section-title">College Information</h2>
+        {% for info in college_info %}
+        <p>Roll No: {{ info.roll_no }}</p>
+        <p>Course: {{ info.course.name }}</p>
+            <p>Specialization: {{ info.specialization.name }}</p>
+        {% endfor %}
+        
+        <h2 id="education-info" class="section-title">Education Information</h2>
+        {% for edu in education_info %}
+        <p>Tenth School: {{ edu.tenth_school }}</p>
+        <p>Tenth Year: {{ edu.tenth_year }}</p>
+        <p>Tenth Percentage: {{ edu.tenth_percentage }}</p>
+        <img src="{{ edu.tenth_school_certificate.url }}" alt="Tenth Certificate" class="certificate">
+        <p>Twelfth School: {{ edu.twelfth_school }}</p>
+        <p>Twelfth Year: {{ edu.twelfth_year }}</p>
+        <p>Twelfth Percentage: {{ edu.twelfth_percentage }}</p>
+        <img src="{{ edu.twelfth_school_certificate.url }}" alt="Twelfth Certificate" class="certificate">
+        <p>Degree College: {{ edu.degree_college }}</p>
+        <p>Degree Course: {{ edu.degree_course }}</p>
+        <p>Degree Year: {{ edu.degree_year }}</p>
+            <img src="{{ edu.degree_certificate.url }}" alt="Degree Certificate" class="certificate">
+        {% endfor %}
+        
+        <h2 id="documents" class="section-title">Documents</h2>
+        {% for doc in documents %}
+            <p>{{ doc.get_document_type_display }}: <a href="{{ doc.document_file.url }}">{{ doc.document_file.name }}</a></p>
+        {% endfor %}
+        
+        <h2 id="experiences" class="section-title">Experiences</h2>
+        {% for exp in experiences %}
+        <p>Job Title: {{ exp.job_title }}</p>
+        <p>Company: {{ exp.company_name }}</p>
+        <p>Start Date: {{ exp.start_date }}</p>
+        <p>End Date: {{ exp.end_date}}</p>
+        <p>Description: {{ exp.description }}</p>
+        <img src="{{ exp.certificate.url }}" alt="Experience Certificate" class="certificate" {% if not exp.certificate %}style="display:none;"{% endif %}>
+        {% endfor %}
+
+        <h2 id="projects" class="section-title">Projects</h2>
+        {% for project in projects %}
+            <p>Project Name: {{ project.project_name }}</p>
+            <p>Description: {{ project.description }}</p>
+            <p>Start Date: {{ project.start_date }}</p>
+            <p>End Date: {{ project.end_date }}</p>
+            <a href="{{ project.project_document.url }}">{{ project.project_document.name }}</a>
+            <p>Links: {{ project.project_links }}</p>
+        {% endfor %}
+
+        <h2 id="skills" class="section-title">Skills</h2>
+        {% for skill in skills %}
+            <p>Skill Name: {{ skill.skill_name }}</p>
+            <p>Proficiency Level: {{ skill.proficiency_level }}</p>
+            {% if skill.skill_certificate %}
+                <img src="{{ skill.skill_certificate.url }}" alt="Skill Certificate" class="certificate">
+                {% endif %}
+                {% endfor %}
+
+                <h2 id="achievements" class="section-title">Achievements</h2>
+                {% for achievement in achievements %}
+                <p>Title: {{ achievement.achievement_title }}</p>
+                <p>Description: {{ achievement.description }}</p>
+            <img src="{{ achievement.achievement_certificate.url }}" alt="Achievement Certificate" class="certificate" {% if not achievement.achievement_certificate %}style="display:none;"{% endif %}>
+        {% endfor %}
+
+        <h2 id="interests" class="section-title">Interests</h2>
+        {% for interest in interests %}
+            <p>Interest: {{ interest.interest }}</p>
+            <img src="{{ interest.interest_certificate.url }}" alt="Interest Certificate" class="certificate" {% if not interest.interest_certificate %}style="display:none;"{% endif %}>
+            {% endfor %}
+            
+            <h2 id="languages" class="section-title">Languages</h2>
+        {% for language in languages %}
+            <p>Language: {{ language.language }}</p>
+            <p>Proficiency: {{ language.proficiency }}</p>
+            <img src="{{ language.language_certificate.url }}" alt="Language Certificate" class="certificate" {% if not language.language_certificate %}style="display:none;"{% endif %}>
+        {% endfor %}
+    </div>
+
+    <!-- Include jQuery, Popper.js, and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    
+</body>
+</html>

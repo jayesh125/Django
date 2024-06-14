@@ -1,0 +1,186 @@
+{% extends "dashbaseadmin.html" %}
+
+{% block css %}
+<style>
+    /* General table styling */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    /* Table header styling */
+    th, td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    /* Table header background and text color */
+    th {
+        background-color: #f4f4f4;
+        color: #333;
+    }
+
+    /* Table row hover effect */
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    /* Alternate row colors */
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    /* Table cell text color */
+    td {
+        color: #555;
+    }
+
+    /* Styling for images within table cells */
+    td img {
+        max-width: 100px;
+        height: auto;
+        display: block;
+    }
+
+    /* Table link styling */
+    td a {
+        color: #1a73e8;
+        text-decoration: none;
+    }
+
+    td a:hover {
+        text-decoration: underline;
+    }
+
+    /* Message panel styling */
+    .message-panel {
+        float: right;
+        width: 400px;
+        margin-left: 20px;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    .message-panel h3 {
+        margin-top: 0;
+    }
+
+    .message-panel form {
+        margin-top: 10px;
+    }
+
+    .message-panel textarea {
+        width: 100%;
+        height: 100px;
+    }
+
+    .message-panel button {
+        margin-top: 10px;
+        padding: 10px;
+        width: 100%;
+        background-color: #1a73e8;
+        color: white;
+        border: none;
+        border-radius: 5px;
+    }
+</style>
+{% endblock css %}
+
+{% block maincontent %}
+
+<div class="d-flex bd-highlight">
+    <div class="p-2 flex-grow-1 bd-highlight">
+        <h2>Student Detail: {{ student.username }}</h2>
+
+        <h3>Verification Status: {{ student.verification_status }}</h3>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" name="verify">Verify</button>
+            <button type="submit" name="not_verify">Set Not Verified</button>
+        </form>
+    </div>
+    <div class="p-2 bd-highlight">
+        <div class="message-panel ">
+            <h3>Send Message to {{ student.username }}</h3>
+            <form method="post">
+                {% csrf_token %}
+                <div>
+                    <label for="id_subject">Subject:</label>
+                    {{ form.subject }}
+                </div>
+                <div>
+                    <label for="id_body">Body:</label>
+                    {{ form.body }}
+                </div>
+                <button type="submit" >Send</button>
+            </form>
+        </div>
+    </div>
+  </div>
+
+
+
+
+
+<h3>Personal Information</h3>
+<table>
+    <tr><th>Date of Birth</th><td>{{ personal_info.date_of_birth }}</td></tr>
+    <tr><th>Gender</th><td>{{ personal_info.gender }}</td></tr>
+    <tr><th>Phone Number</th><td>{{ personal_info.phone_number }}</td></tr>
+    <tr><th>Address</th><td>{{ personal_info.address }}</td></tr>
+    <!-- Add other fields as necessary -->
+</table>
+
+<h3>College Information</h3>
+<table>
+    <tr><th>Roll Number</th><td>{{ college_info.roll_no }}</td></tr>
+    <tr><th>Course</th><td>{{ college_info.course }}</td></tr>
+    <tr><th>Specialization</th><td>{{ college_info.specialization }}</td></tr>
+</table>
+
+<h3>Education Information</h3>
+<table>
+    <thead>
+        <tr>
+            <th>School/College</th>
+            <th>Year</th>
+            <th>Percentage</th>
+            <th>Certificate</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for edu in education_info %}
+        <tr>
+            <td>{{ edu.tenth_school }}</td>
+            <td>{{ edu.tenth_year }}</td>
+            <td>{{ edu.tenth_percentage }}</td>
+            <td><a href="{{ edu.tenth_school_certificate.url }}">View Document</a></td>
+        </tr>
+        <!-- Add other rows for 12th and degree education -->
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3>Documents</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Type</th>
+            <th>File</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for document in documents %}
+        <tr>
+            <td>{{ document.document_type }}</td>
+            <td><a href="{{ document.document_file.url }}">View Document</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

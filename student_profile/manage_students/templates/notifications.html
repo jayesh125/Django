@@ -1,0 +1,30 @@
+{% extends "dashbase.html" %}
+
+{% block css %}
+<style>
+  .ml-auto, .mx-auto {
+    margin-left: initial !important; /* Reset margin-left */
+  }
+</style>
+{% endblock css %}
+
+{% block maincontent %}
+
+<div class="jumbotron">
+    <h1 class="display-4">Notifications</h1>
+    <hr >
+    {% if notifications %}
+    <ul>
+        {% for notification in notifications %}
+        <li class="lead">{{ notification.message }}</li>
+        <small>From: {{ notification.sender.username }} | {{ notification.timestamp }}</small>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No notifications</p>
+    {% endif %}
+  </div>
+
+    
+
+{% endblock maincontent %}

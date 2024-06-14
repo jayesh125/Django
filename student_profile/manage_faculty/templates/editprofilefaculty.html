@@ -1,0 +1,408 @@
+{% extends "dashbasefaculty.html" %}
+
+{% block title %}Edit Profile {% endblock title %}
+
+{% block css %}
+<style>
+  .ml-auto, .mx-auto {
+    margin-left: initial !important; /* Reset margin-left */
+  }
+</style>
+{% endblock css %}
+
+{% block maincontent %}
+
+  <nav class="mb-2">
+    <div class="nav nav-tabs justify-content-between" id="nav-tab" role="tablist">
+      <a class="nav-item nav-link{% if active_tab == 'personal' %} active{% endif %}" id="nav-personal-tab"
+        href="{% url 'form_view_faculty' tab='personal' %}" role="tab" aria-controls="nav-personal"
+        aria-selected="true">Personal</a>
+
+      <a class="nav-item nav-link{% if active_tab == 'skills' %} active{% endif %}" id="nav-skills-tab"
+        href="{% url 'form_view_faculty' tab='skills' %}" role="tab" aria-controls="nav-skills" aria-selected="false">Skills</a>
+      <a class="nav-item nav-link{% if active_tab == 'achievements' %} active{% endif %}" id="nav-achievements-tab"
+        href="{% url 'form_view_faculty' tab='achievements' %}" role="tab" aria-controls="nav-achievements"
+        aria-selected="false">Achievements</a>
+      <a class="nav-item nav-link{% if active_tab == 'interests' %} active{% endif %}" id="nav-interests-tab"
+        href="{% url 'form_view_faculty' tab='interests' %}" role="tab" aria-controls="nav-interests"
+        aria-selected="false">Interests</a>
+      <a class="nav-item nav-link{% if active_tab == 'languages' %} active{% endif %}" id="nav-languages-tab"
+        href="{% url 'form_view_faculty' tab='languages' %}" role="tab" aria-controls="nav-languages"
+        aria-selected="false">Languages</a>
+    </div>
+  </nav>
+
+  <!-- Progress bar -->
+  <div class="progress mb-3">
+    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+      style="width: {{ progress }}%;" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+  </div>
+
+  <div class="tab-content" id="nav-tabContent">
+    <!-- Personal tab -->
+    <div class="tab-pane fade{% if active_tab == 'personal' %} show active{% endif %}" id="nav-personal" role="tabpanel"
+      aria-labelledby="nav-personal-tab">
+      {% if personal_info %}
+      {% if is_editing %}
+      <!-- Display editable fields -->
+      <form method="post" action="{% url 'form_view_faculty' tab='personal' %}">
+
+        {% csrf_token %}
+        {{ current_form.as_p }}
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="button" class="btn btn-secondary"
+          onclick="window.location.href='{% url 'form_view_faculty' tab='personal' %}'">Cancel</button>
+        <button type="button" class="btn btn-secondary"
+          onclick="window.location.href='{% url 'form_view_faculty' tab='personal' %}'">View Saved Form</button>
+
+      </form>
+      {% else %}
+      <!-- Display saved information with disabled fields -->
+      <div class="row">
+        <div class="col-md-6">
+          <form>
+            <div class="form-group">
+              <label for="date_of_birth">Date of Birth:</label>
+              <input type="text" id="date_of_birth" name="date_of_birth" value="{{ personal_info.date_of_birth }}"
+                class="form-control" disabled>
+            </div>
+            <div class="form-group">
+              <label for="gender">Gender:</label>
+              <input type="text" id="gender" name="gender" value="{{ personal_info.gender }}" class="form-control"
+                disabled>
+            </div>
+            <div class="form-group">
+              <label for="phone_number">Phone Number:</label>
+              <input type="text" id="phone_number" name="phone_number" value="{{ personal_info.phone_number }}"
+                class="form-control" disabled>
+            </div>
+            <div class="form-group">
+              <label for="address">Address:</label>
+              <input type="text" id="address" name="address" value="{{ personal_info.address }}" class="form-control"
+                disabled>
+            </div>
+          </form>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="profile_picture">Profile Picture:</label><br>
+            {% if personal_info.profile_picture %}
+            <img src="{{ personal_info.profile_picture.url }}" alt="Profile Picture" class="rounded-circle"
+              style="width: 135px; height: 135px;">
+            {% else %}
+            <!-- Display a placeholder image or a message indicating no profile picture -->
+            <p>No profile picture available</p>
+            {% endif %}
+          </div>
+          <div class="form-group">
+            <label for="aadhar_front">Aadhar Card Front:</label><br>
+            {% if personal_info.aadhar_front %}
+            <img src="{{ personal_info.aadhar_front.url }}" alt="Aadhar Card Front" class="rounded"
+              style="width: 135px; height: 135px;">
+            {% else %}
+            <!-- Display a placeholder image or a message indicating no profile picture -->
+            <p>No profile picture available</p>
+            {% endif %}
+          </div>
+          <div class="form-group">
+            <label for="aadhar_back">Aadhar Card Back:</label><br>
+            {% if personal_info.aadhar_back %}
+            <img src="{{ personal_info.aadhar_back.url }}" alt="Aadhar Card Back" class="rounded"
+              style="width: 135px; height: 135px;">
+            {% else %}
+            <!-- Display a placeholder image or a message indicating no profile picture -->
+            <p>No profile picture available</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      </form> <!-- Closing form tag -->
+
+      <!-- Edit and Delete buttons -->
+      <div class="btn-group" role="group" aria-label="Edit and Delete buttons">
+        {% if user.is_authenticated %}
+        <!-- Only show delete button to admin users -->
+        <form method="post" action="{% url 'delete_personal_info' %}">
+          {% csrf_token %}
+          <input type="hidden" name="user_id" value="{{ personal_info.user_id }}">
+          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmDelete">Delete & edit
+            again</button>
+          <!-- Modal for confirmation -->
+          <div class="modal fade" id="confirmDelete" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="confirmDeleteLabel">Confirm Delete</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  Are you sure you want to delete this information?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                  <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        {% endif %}
+      </div>
+      {% endif %}
+      {% else %}
+      <!-- Display form fields for input -->
+      <form method="post" action="{% url 'form_view_faculty' tab='personal' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ current_form.as_p }}
+        <button type="submit" class="btn btn-primary">Save</button>
+      </form>
+      {% endif %}
+    </div>
+
+    <!--Skills tab -->
+    <div class="tab-pane fade{% if active_tab == 'skills' %} show active{% endif %}" id="nav-skills" role="tabpanel" aria-labelledby="nav-skills-tab">
+      <h3>Skills</h3>
+      {% if skills %}
+      <!-- Display saved skills details in a table -->
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Skill Name</th>
+            <th>Proficiency Level</th>
+            <th>Skill Certificate</th>
+            <th></th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for skill in skills %}
+          <tr>
+            <td>{{ skill.skill_name }}</td>
+            <td>{{ skill.proficiency_level }}</td>
+            <td>{{ skill.skill_certificate.name }}</td>
+            <td>
+              {% if skill.skill_certificate %}
+              <a href="{{ skill.skill_certificate.url }}" target="_blank">View Certificate</a>
+              {% else %}
+              No certificate uploaded
+              {% endif %}
+            </td>
+            <td>
+              <button type="button" class="btn btn-primary" onclick="window.location.href='{% url 'form_view_faculty' tab='skills' %}?edit_instance_id={{ skill.id }}'">Edit</button>
+              <form action="{% url 'delete_instance' active_tab=active_tab instance_id=skill.id %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p>No skills details saved.</p>
+      {% endif %}
+
+      <form method="post" action="{% url 'form_view_faculty' tab='skills' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="id_skill_name">Skill Name:</label>
+          {{ current_form.skill_name }}
+        </div>
+        <div class="form-group">
+          <label for="id_proficiency_level">Proficiency Level:</label><br>
+          <div class="btn-group proficiency-level" data-toggle="buttons">
+              {% for level in proficiency_levels %}
+              <label class="btn btn-secondary {% if level == current_form.proficiency_level.value %} active {% endif %}">
+                  <input type="radio" name="proficiency_level" autocomplete="off" value="{{ level }}">
+                  {{ level }}
+              </label>
+              {% endfor %}
+          </div>
+        </div>      
+        <div class="form-group">
+          <label for="id_skill_certificate">Skill Certificate:</label>
+          {{ current_form.skill_certificate }}
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'form_view_faculty' tab=next_tab %}'">Next</button>
+      </form>
+            
+    </div>
+
+    <!--Achievements tab -->
+    <div class="tab-pane fade{% if active_tab == 'achievements' %} show active{% endif %}" id="nav-achievements" role="tabpanel" aria-labelledby="nav-achievements-tab">
+      <h3>Achievements</h3>
+      {% if achievements %}
+      <!-- Display saved achievements details in a table -->
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Achievement Title</th>
+            <th>Description</th>
+            <th>Achievement Date</th>
+            <th>Achievement Certificate</th>
+            <th></th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for achievement in achievements %}
+          <tr>
+            <td>{{ achievement.achievement_title }}</td>
+            <td>{{ achievement.description }}</td>
+            <td>{{ achievement.achievement_date }}</td>
+            <td>{{ achievement.achievement_certificate.name }}</td>
+            <td>
+              {% if achievement.achievement_certificate %}
+              <a href="{{ achievement.achievement_certificate.url }}" target="_blank">View Certificate</a>
+              {% else %}
+              No certificate uploaded
+              {% endif %}
+            </td>
+            <td>
+              <button type="button" class="btn btn-primary" onclick="window.location.href='{% url 'form_view_faculty' tab='achievements' %}?edit_instance_id={{ achievement.id }}'">Edit</button>
+              <form action="{% url 'delete_instance' active_tab=active_tab instance_id=achievement.id %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p>No achievements details saved.</p>
+      {% endif %}
+      <form method="post" action="{% url 'form_view_faculty' tab='achievements' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ current_form.as_p }}
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'form_view_faculty' tab=next_tab %}'">Next</button>
+      </form>
+    </div>
+
+    <!--Interests tab -->
+    <div class="tab-pane fade{% if active_tab == 'interests' %} show active{% endif %}" id="nav-interests" role="tabpanel" aria-labelledby="nav-interests-tab">
+      <h3>Interests</h3>
+      {% if interests %}
+      <!-- Display saved interests details in a table -->
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Interest</th>
+            <th>Interest Certificate</th>
+            <th></th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for interest in interests %}
+          <tr>
+            <td>{{ interest.interest }}</td>
+            <td>{{ interest.interest_certificate.name }}</td>
+            <td>
+              {% if interest.interest_certificate %}
+              <a href="{{ interest.interest_certificate.url }}" target="_blank">View Certificate</a>
+              {% else %}
+              No certificate uploaded
+              {% endif %}
+            </td>
+            <td>
+              <button type="button" class="btn btn-primary" onclick="window.location.href='{% url 'form_view_faculty' tab='interests' %}?edit_instance_id={{ interest.id }}'">Edit</button>
+              <form action="{% url 'delete_instance' active_tab=active_tab instance_id=interest.id %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p>No interests details saved.</p>
+      {% endif %}
+      <form method="post" action="{% url 'form_view_faculty' tab='interests' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ current_form.as_p }}
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'form_view_faculty' tab=next_tab %}'">Next</button>
+      </form>
+    </div>
+
+    <!--Languages tab -->
+    <div class="tab-pane fade{% if active_tab == 'languages' %} show active{% endif %}" id="nav-languages" role="tabpanel" aria-labelledby="nav-languages-tab">
+      <h3>Languages</h3>
+      {% if languages %}
+      <!-- Display saved languages details in a table -->
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Language</th>
+            <th>Proficiency</th>
+            <th>Language Certificate</th>
+            <th></th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for language in languages %}
+          <tr>
+            <td>{{ language.language }}</td>
+            <td>{{ language.proficiency }}</td>
+            <td>{{ language.language_certificate.name }}</td>
+            <td>
+              {% if language.language_certificate %}
+              <a href="{{ language.language_certificate.url }}" target="_blank">View Certificate</a>
+              {% else %}
+              No certificate uploaded
+              {% endif %}
+            </td>
+            <td>
+              <button type="button" class="btn btn-primary" onclick="window.location.href='{% url 'form_view_faculty' tab='languages' %}?edit_instance_id={{ language.id }}'">Edit</button>
+              <form action="{% url 'delete_instance' active_tab=active_tab instance_id=language.id %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p>No languages details saved.</p>
+      {% endif %}
+      <form method="post" action="{% url 'form_view_faculty' tab='languages' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="id_language">Language:</label>
+          {{ current_form.language }}
+        </div>
+
+        <div class="form-group">
+          <label for="id_proficiency_level">Proficiency Level:</label><br>
+          <div class="btn-group proficiency-level" data-toggle="buttons">
+              {% for level in proficiency_levels %}
+              <label class="btn btn-secondary {% if level == current_form.proficiency_level.value %} active {% endif %}">
+                  <input type="radio" name="proficiency_level" autocomplete="off" value="{{ level }}">
+                  {{ level }}
+              </label>
+              {% endfor %}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="id_language_certificate">Language Certificate:</label>
+          {{ current_form.language_certificate }}
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'form_view_faculty' tab=next_tab %}'">Next</button>
+      </form>
+      
+    </div>
+
+
+  </div>
+
+{% endblock maincontent %}

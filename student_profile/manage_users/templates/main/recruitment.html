@@ -1,0 +1,45 @@
+{% extends 'recruitmentbase.html' %}
+
+{% block carousel %}{% endblock carousel %}
+
+{% block content %}{% endblock content %}
+
+{% block maincontent %}
+{% load static %}
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container text-center">
+        <h1>Welcome to IMRT</h1>
+        <p>Explore the profiles of our talented students and discover the future leaders in MBA, MBA-IT, and MBA-HRD.</p>
+    </div>
+</section>
+
+<!-- Student Profiles by Courses Section -->
+<section class="student-profiles">
+    <div class="container">
+        <h2 class="section-title text-center">Student Profiles</h2>
+        <div class="row row-cols-1 row-cols-md-3">
+            {% for course in courses %}
+            <div class="col mb-4">
+                <div class="card">
+                    {% if course == 'Master of Business Administration in Information Technology' %}
+                        <img src={% static "main/mbait.png" %} class="card-img-top" alt="...">
+                    {% else %}
+                    <img src="..." class="card-img-top" alt="...">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ course.name }}</h5>
+                        <p class="card-text">{{course.short_name}}</p>
+                        <a href="{{ course.get_absolute_url }}" class="btn btn-primary">View Profiles</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p>No students enrolled in this course yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}

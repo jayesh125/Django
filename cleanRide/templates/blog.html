@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+	{% block title %}
+	Blogs
+	{% endblock title %}
+
+	{% block body %}
+	<body>
+		{% load static %}
+		<!-- Start Hero Section -->
+		<div class="hero">
+			<div class="container">
+				<div class="row justify-content-between">
+						<div class="col-lg-5">
+							<div class="intro-excerpt">
+								<h1>Blog</h1>
+								<p class="mb-4">Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate velit imperdiet dolor tempor tristique.</p>
+								<p><a href="" class="btn btn-secondary me-2">Shop Now</a><a href="#" class="btn btn-white-outline">Explore</a></p>
+							</div>
+						</div>
+						<div class="col-lg-7">
+							<div class="hero-img-wrap">
+								<img src="{% static "images/carwashHome.png" %}" class="img-fluid">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	<!-- End Hero Section -->
+
+			
+			
+	<!-- Start Blog Section -->
+		<div class="blog-section">
+			<div class="container">
+				<div class="row">
+					{% for post in posts %}
+					<div class="col-12 col-sm-6 col-md-4 mb-4 mb-md-0">
+						<div class="post-entry">
+							<a href="#" class="post-thumbnail">
+								<img src="{{ post.image.url }}" alt="Image" class="img-fluid">
+							</a>
+							<div class="post-content-entry">
+								<h3><a href="#">{{ post.title }}</a></h3>
+								<div class="meta">
+									<span>by <a href="#">{{ post.author }}</a></span> 
+									<span>on <a href="#">{{ post.date_posted }}</a></span>
+								</div>
+							</div>
+						</div>
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+		<!-- End Blog Section -->	
+
+	{% endblock body %}
+
+{% block heroSection %}{% endblock heroSection %}
+
+{% block WhyChooseUs %}{% endblock WhyChooseUs %}
+
+{% block HelpSection %}{% endblock HelpSection %}
+
+{% block productSection %}{% endblock productSection %}
+
+{% block popularProduct %}{% endblock popularProduct %}
+
+{% block blogSection %}{% endblock blogSection %}
+
+{% block testimonial %}{% endblock testimonial %}

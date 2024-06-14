@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <title>{% block title %}{% endblock title %}</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href={% static "img/favicon.ico" %} rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href={% static "lib/animate/animate.min.css" %} rel="stylesheet">
+    <link href={% static "lib/owlcarousel/assets/owl.carousel.min.css" %} rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href={% static "css/bootstrap.min.css" %} rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href={% static "css/style.css" %} rel="stylesheet">
+
+    {% comment %} <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"> {% endcomment %}
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    
+    <style>
+        .team-item img {
+            width: 100%;
+            height: 300px; /* Set a uniform height for all images */
+            object-fit: cover; /* Ensure images cover the designated area */
+        }
+        {% block css %}{% endblock css %}
+    </style>
+
+    {% block head %}{% endblock head %}
+</head>
+
+<body>
+    {% load static %}
+    {% csrf_token %}
+    <!-- Spinner Start -->
+    <div id="spinner"
+        class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+    <!-- Spinner End -->
+
+    {% block mainheader %}
+    <!-- Main Header -->
+    <div class="container container-fluid mx-auto"> <!-- Added mx-auto class for horizontal centering -->
+        <a href={% url "index" %} class="d-flex align-items-center justify-content-center px-4 px-lg-5"> <!-- Added justify-content-center class for horizontal centering -->
+            <img class="img-fluid" src={% static "mvp.png" %} alt="" style="height: 165px;">
+            <h2 class="m-0 text-primary mx-2 text-center">M.V.P's <br> Institute of Management <br> Research &amp; Technology [I.M.R.T]</h2>
+            <img class="img-fluid" src={% static "imrt.png" %} alt="" style="height: 165px;">
+        </a>
+    </div>
+    {% endblock mainheader %}
+
+    {% block navbar %}
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
+        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
+            <ul class="navbar-nav">
+                {% block navitems %}{% endblock navitems %}
+                <li class="nav-item">
+                    <a href={% url "index" %} class="nav-link active">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href={% url "about" %} class="nav-link">About</a>
+                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a href={% url "recruitment" %} class="nav-link">Recruitment</a>
+                    </li>
+                {% else %}
+                <li class="nav-item">
+                    <button class="nav-link btn" type="button" data-bs-toggle="modal" data-bs-target="#recruitmentModal">
+                        Recruitment
+                    </button>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a href={% url "team" %} class="nav-link">Our Team</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href={% url "courses" %} class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Courses</a>
+                    <div class="dropdown-menu fade-down m-0">
+                        <a href="team.html" class="dropdown-item">Master Programs</a>
+                        <a href="testimonial.html" class="dropdown-item">PG Diploma Programs</a>
+                        <a href="404.html" class="dropdown-item">Research Center</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href={% url "iqac" %} class="nav-link">IQAC</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                    <div class="dropdown-menu fade-down m-0">
+                        <a href="team.html" class="dropdown-item">Our Team</a>
+                        <a href="testimonial.html" class="dropdown-item">Testimonial</a>
+                        <a href="404.html" class="dropdown-item">404 Page</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href={% url "contact" %} class="nav-link">Contact</a>
+                </li>
+            </ul>
+        </div>
+        <div id="signupButtonContainer">
+            {% if user.is_authenticated %}
+                <!-- If user is authenticated, display welcome message and dropdown -->
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Welcome, {{ user.username }}
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="userDropdown">
+                        <a class="dropdown-item" href="#">Profile</a>
+                        <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                    </div>
+                </div>
+            {% else %}
+                <!-- If user is not authenticated, display sign-up button -->
+                <button type="button" class="btn btn-primary py-2 px-lg-2" data-bs-toggle="modal" data-bs-target="#userTypeModal">
+                    Sign Up Now<i class="fa fa-arrow-right ms-3"></i>
+                </button>
+                
+                <a href={% url "signin" %}>
+                    <button type="button" class="btn btn-primary py-2 px-lg-2">
+                        Log In Now<i class="fa fa-arrow-right ms-3"></i>
+                    </button>
+                </a>
+            {% endif %}
+        </div>                
+    </nav>
+    <!-- Navbar End -->
+    {% endblock navbar %}
+
+    <!-- Recruitment Modal -->
+    <div class="modal fade" id="recruitmentModal" tabindex="-1" aria-labelledby="recruitmentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="recruitmentModalLabel">Access Restricted</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    You need to sign up first to access this page.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userTypeModal">
+                        Sign Up Now<i class="fa fa-arrow-right ms-3"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- User Type Modal for signup -->
+    <div class="modal fade" id="userTypeModal" tabindex="-1" aria-labelledby="userTypeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userTypeModalLabel">Select User Type</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you a student, visitor, or a faculty member?</p>
+                    <a href="{% url 'signupstudent' %}" class="btn btn-primary">Student</a>
+                    <a href="{% url 'signup' %}" class="btn btn-primary">Visitor</a>
+                    <a href="{% url 'signupfaculty' %}" class="btn btn-primary">Faculty</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Alert messages -->
+
+    {% if messages %}
+    <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="messageModalLabel">Alert Messages</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {% for message in messages %}
+                        <div class="alert {% if message.tags %} alert-{{ message.tags }} {% endif %} alert-info" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% block carousel %}
+    <!-- Carousel Start -->
+    <div class="container-fluid p-0 mb-5">
+        <div class="owl-carousel header-carousel position-relative">
+            <div class="owl-carousel-item position-relative">
+                <img class="img-fluid" src={% static "img/carousel-1.png" %} alt="">
+                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center"
+                    style="background: rgba(24, 29, 56, .7);">
+                    <div class="container">
+                        <div class="row justify-content-start">
+                            <div class="col-sm-10 col-lg-8">
+                                
+                                <h1 class="display-3 text-white animated slideInDown">Best Post-Graduation Courses
+                                </h1>
+                                <p class="fs-5 text-white mb-4 pb-2">Your Next Step to Professional Mastery</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="owl-carousel-item position-relative">
+                <img class="img-fluid" src={% static "img/carousel-2.png" %} alt="">
+                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center"
+                    style="background: rgba(24, 29, 56, .7);">
+                    <div class="container">
+                        <div class="row justify-content-start">
+                            <div class="col-sm-10 col-lg-8">
+                                <h5 class="text-primary text-uppercase mb-3 animated slideInDown">
+                                </h5>
+                                <h1 class="display-3 text-white animated slideInDown">Welcome to IMRT!
+                                </h1>
+                                <p class="fs-5 text-white mb-4 pb-2">Innovate, Lead, Succeed – Join Our Management Programs</p>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Carousel End -->
+    {% endblock carousel %}
+
+    {% block content %}
+    <!-- Service Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="service-item text-center pt-3">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-graduation-cap text-primary mb-4"></i>
+                            <h5 class="mb-3">Skilled Instructors</h5>
+                            <p>Our experienced faculty members are leaders in their fields, committed to your success.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="service-item text-center pt-3">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-globe text-primary mb-4"></i>
+                            <h5 class="mb-3">Offline Classes</h5>
+                            <p>Engage in face-to-face learning with peers and instructors in a dynamic classroom setting.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="service-item text-center pt-3">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-home text-primary mb-4"></i>
+                            <h5 class="mb-3">Certified Projects</h5>
+                            <p>Work on industry-certified projects that provide practical, hands-on experience.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+                    <div class="service-item text-center pt-3">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-book-open text-primary mb-4"></i>
+                            <h5 class="mb-3">Book Library</h5>
+                            <p>Access an extensive library of resources to support your learning and research needs.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>        
+        </div>
+    </div>
+    <!-- Service End -->
+
+    <!-- About Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s" style="min-height: 400px;">
+                    <div class="position-relative h-100">
+                        <img class="img-fluid position-absolute w-100 h-100" src={% static "img/about.jpg" %} alt=""
+                            style="object-fit: cover;">
+                    </div>
+                </div>
+                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
+                    <h6 class="section-title bg-white text-start text-primary pe-3">About Us</h6>
+                    <h1 class="mb-4">Welcome to IMRT</h1>
+                    <p class="mb-4">Unlock Your Leadership Potential with Us!</p>
+                    <p class="mb-4">At IMRT, we are dedicated to shaping future leaders with our premier management education. Our programs are designed to transform ambition into achievement, providing you with the skills and knowledge to excel in the business world.</p>
+                    <div class="row gy-2 gx-4 mb-4">
+                        <div class="col-sm-6">
+                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Skilled Instructors</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Offline Classes</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Certified Projects</p>
+                        </div>
+                    </div>
+                </div>            
+            </div>
+        </div>
+    </div>
+    <!-- About End -->
+
+    <!-- Categories Start -->
+    <div class="container-xxl py-5 category">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h6 class="section-title bg-white text-center text-primary px-3">Categories</h6>
+                <h1 class="mb-5">Courses Categories</h1>
+            </div>
+            <div class="row g-3">
+                <div class="col-lg-7 col-md-6">
+                    <div class="row g-3">
+                        <!-- MBA Course -->
+                        <div class="col-lg-12 col-md-12 wow zoomIn" data-wow-delay="0.1s">
+                            <a class="position-relative d-block overflow-hidden" href="">
+                                <img class="img-fluid" src="{% static 'img/mba.png' %}" alt="">
+                                <div class="bg-white text-center position-absolute bottom-0 end-0 py-2 px-3"
+                                    style="margin: 1px;">
+                                    <h5 class="m-0">MBA</h5>
+                                    <small class="text-primary">Specializations: MKT, FIN, HRM, OSCM, BA</small>
+                                </div>
+                            </a>
+                        </div>
+                        <!-- MBA-IT Course -->
+                        <div class="col-lg-6 col-md-12 wow zoomIn" data-wow-delay="0.3s">
+                            <a class="position-relative d-block overflow-hidden" href="">
+                                <img class="img-fluid" src="{% static 'softwareDevelope.jpg' %}" alt="">
+                                <div class="bg-white text-center position-absolute bottom-0 end-0 py-2 px-3"
+                                    style="margin: 1px;">
+                                    <h5 class="m-0">MBA-IT</h5>
+                                    <small class="text-primary">Technology Management</small>
+                                </div>
+                            </a>
+                        </div>
+                        <!-- MBA-HRD Course -->
+                        <div class="col-lg-6 col-md-12 wow zoomIn" data-wow-delay="0.5s">
+                            <a class="position-relative d-block overflow-hidden" href="">
+                                <img class="img-fluid" src="{% static 'img/mbahrd.png' %}" alt="">
+                                <div class="bg-white text-center position-absolute bottom-0 end-0 py-2 px-3"
+                                    style="margin: 1px;">
+                                    <h5 class="m-0">MBA-HRD</h5>
+                                    <small class="text-primary">Human Resource Development</small>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Course Overview -->
+                <div class="col-lg-5 col-md-6 wow zoomIn" data-wow-delay="0.7s" style="min-height: 350px;">
+                    <a class="position-relative d-block h-100 overflow-hidden" href="">
+                        <img class="img-fluid position-absolute w-100 h-100" src="{% static 'img/mbait.png' %}" alt=""
+                            style="object-fit: cover;">
+                        <div class="bg-white text-center position-absolute bottom-0 end-0 py-2 px-3"
+                            style="margin:  1px;">
+                            <h5 class="m-0">Masters Programs Overview</h5>
+                            <small class="text-primary">Explore Our Specialized Programs</small>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Categories Start -->
+
+    <!-- Team Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h6 class="section-title bg-white text-center text-primary px-3">Instructors</h6>
+                <h1 class="mb-5">Expert Instructors</h1>
+            </div>
+            <div class="row g-4">
+
+                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="team-item bg-light">
+                        <div class="overflow-hidden">
+                            <img class="img-fluid" src="{% static 'AhireSir.png' %}" alt="">
+                        </div>
+                        <div class="text-center p-4">
+                            <h5 class="mb-0">Dr.Ahire Girish Manohar</h5>
+                            <small>Associate Professor</small>
+                            <p class="mt-2">ahiregirish@gmail.com</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="team-item bg-light">
+                        <div class="overflow-hidden">
+                            <img class="img-fluid" src="{% static 'GaikwadSir.png' %}" alt="">
+                        </div>
+                        <div class="text-center p-4">
+                            <h5 class="mb-0">Dr. Sanjay Annasaheb Gaikwad</h5>
+                            <small>Associate Professor & Research Guide</small>
+                            <p class="mt-2">san_comp1@hotmail.com</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="team-item bg-light">
+                        <div class="overflow-hidden">
+                            <img class="img-fluid" src="{% static 'JayeshriMadam.png' %}" alt="">
+                        </div>
+                        <div class="text-center p-4">
+                            <h5 class="mb-0">Dr Jayshri Jitendra Kadam</h5>
+                            <small>Asst. Professor</small>
+                            <p class="mt-2">kadamnirmal@gmail.com</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
+                    <div class="team-item bg-light">
+                        <div class="overflow-hidden">
+                            <img class="img-fluid" src="{% static 'RayateSir.png' %}" alt="">
+                        </div>
+                        <div class="text-center p-4">
+                            <h5 class="mb-0">Prof.Pravin Bhausaheb Rayate</h5>
+                            <small>Assistant Professor</small>
+                            <p class="mt-2">rayate.pravin@gmail.com</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="team-item bg-light">
+                        <div class="overflow-hidden">
+                            <img class="img-fluid" src="{% static 'NandreSir.png' %}" alt="">
+                        </div>
+                        <div class="text-center p-4">
+                            <h5 class="mb-0">Dr. Deepak Vishwasrao Nandre</h5>
+                            <small>Assistant Professor</small>
+                            <p class="mt-2">deep_nandre@yahoo.co.in</p>
+                            <p class="mt-2">deepnandre317@gmail.com</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="team-item bg-light">
+                        <div class="overflow-hidden">
+                            <img class="img-fluid" src="{% static 'BhabadMadam.png' %}" alt="">
+                        </div>
+                        <div class="text-center p-4">
+                            <h5 class="mb-0">Dr Varsha Nivrutti Bhabad</h5>
+                            <small>Assistant Professor</small>
+                            <p class="mt-2">varsha_bhabad@rediffmail.com</p>
+                            <p class="mt-2">varsha.hembade@gmail.com</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="team-item bg-light">
+                        <div class="overflow-hidden">
+                            <img class="img-fluid" src="{% static 'DeshmukhSir.png' %}" alt="">
+                        </div>
+                        <div class="text-center p-4">
+                            <h5 class="mb-0">Deshmukh Harshal Sharadrao</h5>
+                            <small>Assistant Professor (Marketing)</small>
+                            <p class="mt-2">abhiyansai@gmail.com</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Team End -->
+
+    <!-- Testimonial Start -->
+    <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="container">
+            <div class="text-center">
+                <h6 class="section-title bg-white text-center text-primary px-3">Testimonial</h6>
+                <h1 class="mb-5">Our Students Say!</h1>
+            </div>
+            <div class="owl-carousel testimonial-carousel position-relative">
+                <div class="testimonial-item text-center">
+                    <img class="border rounded-circle p-2 mx-auto mb-3" src={% static "img/testimonial-1.jpg" %}
+                        style="width: 80px; height: 80px;">
+                    <h5 class="mb-0">Client Name</h5>
+                    <p>Profession</p>
+                    <div class="testimonial-text bg-light text-center p-4">
+                        <p class="mb-0">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit diam amet diam et
+                            eos. Clita erat ipsum et lorem et sit.</p>
+                    </div>
+                </div>
+                <div class="testimonial-item text-center">
+                    <img class="border rounded-circle p-2 mx-auto mb-3" src={% static "img/testimonial-2.jpg" %}
+                        style="width: 80px; height: 80px;">
+                    <h5 class="mb-0">Client Name</h5>
+                    <p>Profession</p>
+                    <div class="testimonial-text bg-light text-center p-4">
+                        <p class="mb-0">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit diam amet diam et
+                            eos. Clita erat ipsum et lorem et sit.</p>
+                    </div>
+                </div>
+                <div class="testimonial-item text-center">
+                    <img class="border rounded-circle p-2 mx-auto mb-3" src={% static "img/testimonial-3.jpg" %}
+                        style="width: 80px; height: 80px;">
+                    <h5 class="mb-0">Client Name</h5>
+                    <p>Profession</p>
+                    <div class="testimonial-text bg-light text-center p-4">
+                        <p class="mb-0">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit diam amet diam et
+                            eos. Clita erat ipsum et lorem et sit.</p>
+                    </div>
+                </div>
+                <div class="testimonial-item text-center">
+                    <img class="border rounded-circle p-2 mx-auto mb-3" src={% static "img/testimonial-4.jpg" %}
+                        style="width: 80px; height: 80px;">
+                    <h5 class="mb-0">Client Name</h5>
+                    <p>Profession</p>
+                    <div class="testimonial-text bg-light text-center p-4">
+                        <p class="mb-0">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit diam amet diam et
+                            eos. Clita erat ipsum et lorem et sit.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Testimonial End -->
+    {% endblock content %}
+    
+    {% block body %}{% endblock body %}
+
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark text-light footer pt-5  wow fadeIn" data-wow-delay="0.1s">
+        <div class="container py-5">
+            <div class="row g-5">
+                <div class="col-lg-3 col-md-6">
+                    <h4 class="text-white mb-3">Quick Link</h4>
+                    <a class="btn btn-link" href="">About Us</a>
+                    <a class="btn btn-link" href="">Contact Us</a>
+                    <a class="btn btn-link" href="">Privacy Policy</a>
+                    <a class="btn btn-link" href="">Terms & Condition</a>
+                    <a class="btn btn-link" href="">FAQs & Help</a>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h4 class="text-white mb-3">Contact</h4>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>MVP Campus, Shivaji Nagar, Gangapur Road, Nashik-422002, Maharashtra, India
+                         </p>
+                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>0253-2571650, 2970894,</p>
+                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>mvpimrt@gmail.com</p>
+                    <div class="d-flex pt-2">
+                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
+                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-youtube"></i></a>
+                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h4 class="text-white mb-3">Gallery</h4>
+                    <div class="row g-2 pt-2">
+                        <div class="col-4">
+                            <img class="img-fluid bg-light p-1" src={% static "img/mba.png" %} alt="">
+                        </div>
+                        <div class="col-4">
+                            <img class="img-fluid bg-light p-1" src={% static "img/mbahrd.png" %} alt="">
+                        </div>
+                        <div class="col-4">
+                            <img class="img-fluid bg-light p-1" src={% static "img/mbait.png" %} alt="">
+                        </div>
+                        <div class="col-4">
+                            <img class="img-fluid bg-light p-1" src={% static "softwareDevelope.jpg" %} alt="">
+                        </div>
+                        <div class="col-4">
+                            <img class="img-fluid bg-light p-1" src={% static "softwareTesting.jpg" %} alt="">
+                        </div>
+                        <div class="col-4">
+                            <img class="img-fluid bg-light p-1" src={% static "img/course-1.jpg" %} alt="">
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        <div class="container">
+            <div class="copyright">
+                <div class="row">
+                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                        &copy; <a class="border-bottom" href="#">I.M.R.T</a>, All Right Reserved.
+                    </div>
+                    <div class="col-md-6 text-center text-md-end">
+                        <div class="footer-menu">
+                            <a href="">Home</a>
+                            <a href="">Cookies</a>
+                            <a href="">Help</a>
+                            <a href="">FQAs</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+
+    
+
+    <!--Verification Modal Student-->
+    <div class="modal fade" id="verificationModal" tabindex="-1" role="dialog" aria-labelledby="verificationModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="verificationModalLabel">Enter Student ID</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="verificationForm">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="studentID">Student ID</label>
+                            <input type="text" class="form-control" id="studentID" name="studentID" required>
+                            <div class="invalid-feedback" id="error-message"></div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src={% static "lib/wow/wow.min.js" %}></script>
+    <script src={% static "lib/easing/easing.min.js" %}></script>
+    <script src={% static "lib/waypoints/waypoints.min.js" %}></script>
+    <script src={% static "lib/owlcarousel/owl.carousel.min.js" %}></script>
+
+    <!-- Template Javascript -->
+    <script src={% static "js/main.js" %}>
+    </script>
+    {% block js %}{% endblock js %}
+    
+</body>
+<!--sign up js-->
+<script>
+    let container = document.getElementById('container')
+
+    toggle = () => {
+        container.classList.toggle('sign-in')
+        container.classList.toggle('sign-up')
+    }
+
+    setTimeout(() => {
+        container.classList.add('sign-in')
+    }, 200)
+
+    $(document).ready(function(){
+        {% if messages %}
+            $('#messageModal').modal('show');
+        {% endif %}
+    });
+    
+    
+    document.getElementById('verificationForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        var studentID = document.getElementById('studentID').value;
+        var csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+        var errorMessage = document.getElementById('error-message');
+
+        fetch("{% url 'verify_student_id' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({ 'studentID': studentID })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = "{% url 'dashboard_home' %}";
+            } else {
+                errorMessage.textContent = data.error;
+                errorMessage.style.display = 'block';
+            }
+        });
+    });
+</script>
+
+</html>

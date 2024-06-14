@@ -1,0 +1,272 @@
+{% extends "dashbaseadmin.html" %}
+
+{% block title %}Dashboard{% endblock title %}
+
+{% block css %}
+<style>
+    .card {
+        transition: all 0.3s ease-in-out;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .fadeIn {
+        animation: fadeInAnimation 1s ease-in-out;
+        animation-fill-mode: forwards;
+        opacity: 0;
+    }
+
+    @keyframes fadeInAnimation {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Button styling */
+    .btn-primary {
+        background: #03045E;
+        border-color: #287328; /* Button border color */
+    }
+
+    .btn:hover {
+        color: black;
+    }
+
+    .btn-primary:hover {
+        background: #EDF6F9;
+        text-color: black;
+    }
+
+    .btn-danger {
+        background: rgb(195,34,34);
+        background: radial-gradient(circle, rgba(195,34,34,1) 0%, rgba(166,11,11,1) 100%);
+        border-color: #ffffff;
+    }
+
+    .btn-danger:hover {
+        background: rgb(195,34,34);
+        background: radial-gradient(circle, rgba(195,34,34,1) 0%, rgba(255,0,0,1) 100%);
+        border-color: #ffffff; /* Button hover border color */
+    }
+    
+    .message-container {
+        margin-bottom: 20px;
+    }
+    
+    .message-card {
+        margin-bottom: 10px;
+    }
+    
+    .message-body-preview {
+        max-height: 60px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .table-responsive {
+        margin-top: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+</style>
+{% endblock css %}
+
+{% block maincontent %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card fadeIn">
+                <div class="card-body">
+                    <h5 class="card-title">Verified Students</h5>
+                    <p class="card-text" id="verified-students-count">{{ verified_students }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card fadeIn">
+                <div class="card-body">
+                    <h5 class="card-title">Enrolled Students</h5>
+                    <p class="card-text" id="enrolled-students-count">{{ enrolled_students }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card fadeIn">
+                <div class="card-body">
+                    <h5 class="card-title">Faculties</h5>
+                    <p class="card-text" id="faculty-count">{{ faculties }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sent Messages Section -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card fadeIn message-container">
+                <div class="card-body">
+                    <h5 class="card-title">Sent Notices</h5>
+                    <div class="mb-3">
+                        <a href="{% url 'notice' %}" class="btn btn-primary">Send notice</a>
+                    </div>
+                    {% for message in sent_messages %}
+                    <div class="card message-card">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">{{ message.sent_at|date:"Y-m-d H:i" }}</h6>
+                            <h5 class="card-title">{{ message.subject }}</h5>
+                            <p class="card-text message-body-preview">{{ message.body|truncatechars:100 }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% if sent_messages.has_next %}
+                    <a href="?page={{ sent_messages.next_page_number }}" class="btn btn-primary">Next</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card fadeIn message-container">
+                <div class="card-body">
+                    <canvas id="combinedStatusChart" width="400" height="400"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mb-4">
+        <div class="col md-6">
+            <div class="card fadeIn student-container">
+                <div class="card-body">
+                    <h5 class="card-title">Not Verified Students</h5>
+                    <div class="card student-card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Enrollment Date</th>
+                                            <th>Courses</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for student in not_verified_students %}
+                                        <tr>
+                                            <td>{{ student.user.first_name }} {{ student.user.last_name }}</td>
+                                            <td>{{ student.user.email }}</td>
+                                            <td>{{ student.enrollment_date }}</td>
+                                            <td>
+                                                {% for course in student.courses.all %}
+                                                    {{ course.short_name }}{% if not forloop.last %}, {% endif %}
+                                                {% endfor %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card fadeIn">
+                <div class="card-body">
+                    <h5 class="card-title">Enrollment Statistics</h5>
+                    <div id="enrollment-chart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+</div>
+{% endblock maincontent %}
+
+{% block js %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Data passed from the Django context
+        var statuses = {{ enrollment_statuses|safe }};
+        var counts = {{ enrollment_counts|safe }};
+
+        // Prepare the trace
+        var trace = {
+            x: statuses,
+            y: counts,
+            type: 'bar'
+        };
+
+        // Layout for the chart
+        var layout = {
+            title: 'Enrollment Status Distribution'
+        };
+
+        // Render the plot
+        Plotly.newPlot('enrollment-chart', [trace], layout);
+
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var ctx = document.getElementById('combinedStatusChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: {{ statuses|safe }},
+                datasets: [{
+                    data: {{ counts|safe }},
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.5)',
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(255, 206, 86, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(153, 102, 255, 0.5)',
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    });
+</script>
+{% endblock js %}

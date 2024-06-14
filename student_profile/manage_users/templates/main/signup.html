@@ -1,0 +1,64 @@
+{% extends "main/basesign.html" %} 
+
+{% block heading %} Sign Up{% endblock heading %} 
+
+{% block form %}
+
+<form action="" method="POST">
+    {% csrf_token %} 
+    {% for field in form %} 
+
+        {% if field.errors %}
+
+            <div class="d-flex flex-row bd-highlight mb-3">
+                <label class="form-label">{{field.label}}</label>
+                {{field}}
+                <small>{{field.errors}}</small>
+            </div>
+
+        {% else %}
+
+            <div class="d-flex flex-row bd-highlight mb-3">
+                <label class="form-label">{{field.label}}</label>
+                {{field}}
+            </div>
+
+        {% endif %} 
+
+    {% endfor %}
+
+    <button class="btn btn-primary" style="width: 100%">Register</button>
+    <p>Already have an account? <a href="{% url 'signin' %}">Login</a></p>
+
+</form>
+
+{% endblock form %} 
+
+{% block js %}
+
+$(document).ready(function() {
+    // Handle change event on user type select
+    $('#userType').change(function() {
+        var userType = $(this).val();
+
+        // Show/hide input fields based on the selected user type
+        if (userType === 'student') {
+            $('.student-id-field').show();
+            $('.faculty-id-field').hide();
+            $('#id_faculty_id').prop('disabled', true);
+            $('#id_student_id').prop('disabled', false);
+        } else if (userType === 'faculty') {
+            $('.student-id-field').hide();
+            $('.faculty-id-field').show();
+            $('#id_faculty_id').prop('disabled', false);
+            $('#id_student_id').prop('disabled', true);
+        } else {
+            $('.student-id-field').hide();
+            $('.faculty-id-field').hide();
+            $('#id_faculty_id').prop('disabled', true);
+            $('#id_student_id').prop('disabled', true);
+        }
+    });
+});
+
+{% endblock js %}

@@ -1,0 +1,54 @@
+{% extends "dashbase.html" %}
+
+{% block head %}
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+{% endblock head %}
+
+{% block main %}
+<div class="container mt-4">
+    <h1 class="mb-4">Orders</h1>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Order ID</th>
+                    <th scope="col">User</th>
+                    <th scope="col">Customer</th>
+                    <th scope="col">Product</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Ordered Date</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Total Cost</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td><a href="{% url 'admin_edit_order' order.pk %}" class="text-decoration-none">{{ order.id }}</a></td>
+                    <td>{{ order.user.username }}</td>
+                    <td>{{ order.customer.name }}</td>
+                    <td>{{ order.product.title }}</td>
+                    <td>{{ order.quantity }}</td>
+                    <td>{{ order.ordered_date }}</td>
+                    <td>
+                        {% if order.status == 'Accepted' %}
+                        <span class="badge badge-success">{{ order.status }}</span>
+                        {% elif order.status == 'Pending' %}
+                        <span class="badge badge-warning">{{ order.status }}</span>
+                        {% elif order.status == 'Rejected' %}
+                        <span class="badge badge-danger">{{ order.status }}</span>
+                        {% else %}
+                        <span class="badge badge-secondary">{{ order.status }}</span>
+                        {% endif %}
+                    </td>
+                    <td>₹{{ order.total_cost }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock main %}

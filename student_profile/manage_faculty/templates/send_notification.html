@@ -1,0 +1,22 @@
+{% extends "dashbasefaculty.html" %}
+
+{% block css %}
+<style>
+  .ml-auto, .mx-auto {
+    margin-left: initial !important; /* Reset margin-left */
+  }
+</style>
+{% endblock css %}
+
+{% block maincontent %}
+
+<div class="bg-primary">
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Send Notification</button>
+    </form>
+    
+</div>
+{% endblock maincontent %}

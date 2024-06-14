@@ -1,0 +1,74 @@
+{% extends "dashbase.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block head %}
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+{% endblock head %}
+
+{% block main %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Product Management</h1>
+        <!-- Form to add a new product -->
+        <form method="post" enctype="multipart/form-data" action="{% url 'add_product' %}" class="d-inline">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button type="submit" class="btn btn-primary ml-2"><i class="bi bi-plus-circle-fill"></i> Add Product</button>
+        </form>
+    </div>
+      
+    <div class="row">
+        <div class="col">
+            <!-- Display existing products in table format -->
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Subcategory</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Discounted Price</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Image</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                        <tr>
+                            <td>{{ product.id }}</td>
+                            <td>
+                                <a href="{% url 'edit_product' product.pk %}" class="text-decoration-none">
+                                    <strong>{{ product.title|truncatechars:25 }}</strong>
+                                </a>
+                            </td>
+                            <td>{{ product.category }}</td>
+                            <td>{{ product.subcategory }}</td>
+                            <td>₹{{ product.selling_price }}</td>
+                            <td>
+                                {% if product.discounted_price %}
+                                    <span class="text-muted">₹{{ product.discounted_price }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ product.description|truncatechars:35 }}</td>
+                            <td>
+                                <img src="{{ product.product_image.url }}" alt="{{ product.title }}" style="width: 100px; height: auto;">
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main %}
+
+{% block js %}
+<!-- You can add your JavaScript here if needed -->
+{% endblock js %}

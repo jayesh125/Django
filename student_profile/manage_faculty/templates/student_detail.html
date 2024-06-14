@@ -1,0 +1,211 @@
+{% extends "dashbasefaculty.html" %}
+
+{% block css %}
+<style>
+    /* General table styling */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    /* Table header styling */
+    th, td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    /* Table header background and text color */
+    th {
+        background-color: #f4f4f4;
+        color: #333;
+    }
+
+    /* Table row hover effect */
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    /* Alternate row colors */
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    /* Table cell text color */
+    td {
+        color: #555;
+    }
+
+    /* Styling for images within table cells */
+    td img {
+        max-width: 100px;
+        height: auto;
+        display: block;
+    }
+
+    /* Table link styling */
+    td a {
+        color: #1a73e8;
+        text-decoration: none;
+    }
+
+    td a:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock css %}
+
+{% block maincontent %}
+
+  <h2>Student Detail: {{ student.username }}</h2>
+
+  <h3>Documents</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>File</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for document in documents %}
+        <tr>
+          <td>{{ document.document_type }}</td>
+          <td><a href="{{ document.document_file.url }}">View Document</a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h3>Experiences</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Job Title</th>
+        <th>Company</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Description</th>
+        <th>Certificate</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for experience in experiences %}
+        <tr>
+          <td>{{ experience.job_title }}</td>
+          <td>{{ experience.company_name }}</td>
+          <td>{{ experience.start_date }}</td>
+          <td>{{ experience.end_date }}</td>
+          <td>{{ experience.description }}</td>
+          <td><img src="{{ experience.certificate.url }}" alt="Certificate" width="100"></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h3>Projects</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Project Name</th>
+        <th>Description</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Document</th>
+        <th>Links</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for project in projects %}
+        <tr>
+          <td>{{ project.project_name }}</td>
+          <td>{{ project.description }}</td>
+          <td>{{ project.start_date }}</td>
+          <td>{{ project.end_date }}</td>
+          <td><a href="{{ project.project_document.url }}">Download</a></td>
+          <td>{{ project.project_links }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h3>Skills</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Skill</th>
+        <th>Proficiency</th>
+        <th>Certificate</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for skill in skills %}
+        <tr>
+          <td>{{ skill.skill_name }}</td>
+          <td>{{ skill.proficiency_level }}</td>
+          <td><img src="{{ skill.skill_certificate.url }}" alt="Certificate" width="100"></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h3>Achievements</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Certificate</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for achievement in achievements %}
+        <tr>
+          <td>{{ achievement.achievement_title }}</td>
+          <td>{{ achievement.description }}</td>
+          <td><img src="{{ achievement.achievement_certificate.url }}" alt="Certificate" width="100"></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h3>Interests</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Interest</th>
+        <th>Certificate</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for interest in interests %}
+        <tr>
+          <td>{{ interest.interest }}</td>
+          <td><img src="{{ interest.interest_certificate.url }}" alt="Certificate" width="100"></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h3>Languages</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Language</th>
+        <th>Proficiency</th>
+        <th>Certificate</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for language in languages %}
+        <tr>
+          <td>{{ language.language }}</td>
+          <td>{{ language.proficiency }}</td>
+          <td><img src="{{ language.language_certificate.url }}" alt="Certificate" width="100"></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}

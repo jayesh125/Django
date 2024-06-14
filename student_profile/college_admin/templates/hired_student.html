@@ -1,0 +1,105 @@
+{% extends "dashbaseadmin.html" %}
+
+{% block css %}
+<style>
+    /* General table styling */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    /* Table header styling */
+    th, td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    /* Table header background and text color */
+    th {
+        background-color: #f4f4f4;
+        color: #333;
+    }
+
+    /* Table row hover effect */
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    /* Alternate row colors */
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    /* Table cell text color */
+    td {
+        color: #555;
+    }
+
+    /* Styling for images within table cells */
+    td img {
+        max-width: 100px;
+        height: auto;
+        display: block;
+    }
+
+    /* Table link styling */
+    td a {
+        color: #1a73e8;
+        text-decoration: none;
+    }
+
+    td a:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock css %}
+
+{% block maincontent %}
+<h1>Hired Students</h1>
+
+{% if filter_programs %}
+<form action="{% url 'hiredstudent' %}" method="get">
+    <label for="program">Filter by Program:</label>
+    <select name="program" id="program">
+        <option value="">All Programs</option>
+        {% for program in filter_programs %}
+        <option value="{{ program.id }}">{{ program.name }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit">Filter</button>
+</form>
+{% endif %}
+
+<table>
+    <thead>
+        <tr>
+            <th>Student ID</th>
+            <th>Student Name</th>
+            <th>Program Completed</th>
+            <th>Enrollment Date</th>
+            <th>Enrollment Status</th>
+            <th>Hire Date</th>
+            <th>Employer</th>
+            <th>Job Title</th>
+            <th>Department</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for student in hired_students %}
+        <tr>
+            <td>{{ student.student.user.username }}</td>
+            <td>{{ student.student.user.first_name }} {{ student.student.user.last_name }}</td>
+            <td>{{ student.course.name }}</td>
+            <td>{{ student.student.enrollment_date }}</td>
+            <td>{{ student.student.enrollment_status }}</td>
+            <td>{{ student.hire_date }}</td>
+            <td>{{ student.employer_name }}</td>
+            <td>{{ student.job_title }}</td>
+            <td>{{ student.department }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock maincontent %}

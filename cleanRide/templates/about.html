@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}About Us{% endblock title %}
+
+{% block body %}
+{% load static %}
+<!-- Start Hero Section -->
+<div class="hero">
+    <div class="container">
+        <div class="row justify-content-between">
+            <div class="col-lg-5">
+                <div class="intro-excerpt mt-5">
+                    <h1>About Us</h1>
+                    <p>
+                        <a href={% url "shop" %} class="btn btn-secondary me-2">Shop Now</a>
+                        <a href={% url "product_catalog" %} class="btn btn-outline-secondary">Explore</a>
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <div class="hero-img-wrap">
+                    <img src="{% static "images/carwashHome.png" %}" class="img-fluid" alt="Hero Image">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Hero Section -->
+
+<!-- Start About Us Section -->
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2 text-center">
+            <h2>About Us</h2>
+            <p>Welcome to Clean Ride, your number one source for all car wash products. We're dedicated to giving you the very best of car care products, with a focus on quality, dependability, and customer service.</p>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-lg-4 offset-lg-1 text-center">
+            <div class="card">
+                <img src="{% static 'images/sonali.jpg' %}" alt="Sonali Pradip Patil" class="card-img-top rounded-end mx-auto mt-3" style="width: 150px; height: 180px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title">Sonali Pradip Patil</h5>
+                    <p class="card-text">MBA-IT 2nd Year (Software Development)</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">Project Overview</h3>
+                    <p class="card-text">Clean Ride is an e-commerce platform built with Django, designed to provide a seamless shopping experience for car enthusiasts. The website features a wide range of car wash products, including soaps, waxes, and detailing tools.</p>
+                    <p class="card-text">The project showcases the integration of front-end and back-end development skills, utilizing Django for robust server-side logic and Bootstrap for a responsive and visually appealing user interface.</p>
+                    <p class="card-text">Features of the Clean Ride website include:</p>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">User-friendly product listings and detailed descriptions</li>
+                        <li class="list-group-item">Secure user authentication and account management</li>
+                        <li class="list-group-item">Shopping cart and checkout functionality</li>
+                        <li class="list-group-item">Admin panel for managing products, orders, and users</li>
+                        <li class="list-group-item">Responsive design for optimal viewing on any device</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End About Us Section -->
+
+{% endblock body %}
+
+{% block heroSection %}{% endblock heroSection %}
+
+{% block WhyChooseUs %}{% endblock WhyChooseUs %}
+
+{% block HelpSection %}{% endblock HelpSection %}
+
+{% block productSection %}{% endblock productSection %}
+
+{% block popularProduct %}{% endblock popularProduct %}
+
+{% block categories %}{% endblock categories %}
+
+{% block testimonial %}{% endblock testimonial %}

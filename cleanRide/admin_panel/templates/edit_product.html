@@ -1,0 +1,41 @@
+{% extends "dashbase.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block head %}
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src={% static "product_admin.js" %}></script>
+</head>
+{% endblock head %}
+
+{% block main %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Edit Product</h1>
+        <a href="{% url 'products' %}" class="btn btn-secondary"><i class="bi bi-arrow-left-circle-fill"></i> Back to Products</a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Product Details</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <div class="mt-2">
+                            <button type="submit" name="save" class="btn btn-primary"><i class="bi bi-save-fill"></i> Save</button>
+                            <button type="submit" name="save_and_add_another" class="btn btn-success"><i class="bi bi-plus-circle-fill"></i> Save and add another</button>
+                            <button type="submit" name="save_and_continue" class="btn btn-info"><i class="bi bi-arrow-right-circle-fill"></i> Save and continue editing</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main %}

@@ -1,0 +1,56 @@
+{% extends 'main/base.html' %}
+
+{% block carousel %}{% endblock carousel %}
+
+{% block css %}
+<!-- Add any additional CSS you need here -->
+{% endblock css %}
+
+{% block body %}
+  {% load static %}
+
+  <div class="container">
+    <div class="row">
+        <div class="col-3">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">All Students</a>
+                {% for course, specializations in specializations_by_course.items %}
+                    <div class="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdown-{{ course.id }}" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ course.short_name }}</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown-{{ course.id }}">
+                            {% for specialization in specializations %}
+                                <a class="dropdown-item" id="v-pills-{{ specialization.id }}-tab" data-toggle="pill" href="#v-pills-{{ specialization.id }}" role="tab" aria-controls="v-pills-{{ specialization.id }}" aria-selected="false">{{ specialization.name }}</a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-9">
+            <div class="tab-content" id="v-pills-tabContent">
+                <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                    {% for specialization, students in students_by_specialization.items %}
+                        <h4>{{ specialization.name }}</h4>
+                        <ul>
+                            {% for student in students %}
+                                <li>{{ student.user.username }} - {{ student.roll_no }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endfor %}
+                </div>
+                {% for specialization, students in students_by_specialization.items %}
+                    <div class="tab-pane fade" id="v-pills-{{ specialization.id }}" role="tabpanel" aria-labelledby="v-pills-{{ specialization.id }}-tab">
+                        <h4>{{ specialization.name }}</h4>
+                        <ul>
+                            {% for student in students %}
+                                <li>{{ student.user.username }} - {{ student.roll_no }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+  </div>
+
+{% endblock body %}

@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block title %} Product Catalog {% endblock title %}
+
+{% block head %}
+<head>
+	{% load static %}
+    <script src={% static "product_admin.js" %}></script>
+</head>
+{% endblock head %}
+
+{% block css %}
+
+	/* Sidebar styles */
+	.sidebar {
+	float: left;
+	width: 20%; /* Adjust width as needed */
+	padding: 20px;
+	background-color: #f2f2f2;
+	}
+
+	.sidebar ul {
+	list-style-type: none;
+	padding: 0;
+	}
+
+	.sidebar li {
+	margin-bottom: 10px;
+	}
+
+	.blog-section .post-entry .post-thumbnail img {
+		border-radius: 20px;
+		-webkit-transition: .3s all ease;
+		-o-transition: .3s all ease;
+		transition: .3s all ease;
+	}
+
+	.navbar {
+		height: 70px; 
+	}
+
+	.content-below-navbar {
+		margin-top: 70px;
+	}
+
+	.post-entry {
+		background: white;
+		padding: 20px; /* Adjust the padding as needed */
+	}
+
+	.post-entry .post-thumbnail img {
+		width: 100%; /* Ensure images fill their container */
+		height: 220px; /* Maintain aspect ratio */
+	}
+
+	.product-display {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		grid-gap: 20px;
+		justify-items: center;
+		align-items: start;
+	}
+
+	.product {
+		/* Define styles for each product item */
+		/* Example styles */
+		border: 1px solid #ccc;
+		padding: 10px;
+		text-align: center;
+	}
+
+	.product-container{
+		padding: 10px;
+		margin : 10px;
+	}
+
+	.cat-img {
+		height : 220px;
+	}
+{% endblock css %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-3">
+            <!-- Filter options -->
+            <h4>Filter Options</h4>
+            <form method="GET" action="{% url 'product_catalog' %}">
+                <div class="mb-3">
+                    <label for="category">Category:</label>
+                    <select id="category" name="category" class="form-control">
+                        <option value="" selected>-- Select Category --</option>
+                        {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="subcategory">Subcategory:</label>
+                    <select id="subcategory" name="subcategory" class="form-control">
+                        <option value="" selected>-- Select Subcategory --</option>
+                        {% for subcategory in subcategories %}
+                        <option value="{{ subcategory.id }}">{{ subcategory.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Apply Filters</button>
+            </form>
+        </div>
+        <div class="col-md-9">
+            <!-- Product display -->
+            <h4>Products</h4>
+            <div class="row">
+                {% for product in products %}
+                <div class="col-md-4">
+                    <div class="card mb-3">
+                        <img src="{{ product.product_image.url }}" class="card-img-top" alt="{{ product.title }}" style="height:220px; width: 220px;">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.title|truncatechars:30 }}</h5>
+                            <p class="card-text">{{ product.description|truncatechars:100 }}</p>
+                            <p class="card-text">Price: ${{ product.selling_price }}</p>
+                        </div>
+						<div class="col sm-2">
+
+							{% if user.is_authenticated  %}
+							{% if item_already_in_cart  %}
+							<a href="{% url 'showcart' %}" class="btn btn-warning shadow px-5 py-2 ms-4">Go to Cart</a>
+							{% else %}
+							<form action="{% url 'add-to-cart' %}" class="d-inline">
+								<input type="hidden" name="prod_id" value="{{product.id}}" id="prod_id">
+								<button type="submit" class="btn btn-primary shadow px-5 py-2">Add to Cart</button>
+							</form>
+							{% endif %}
+							{% endif %}
+							
+							{% if not request.user.is_authenticated %}
+							<form action="{% url 'add-to-cart' %}" class="d-inline" method="GET">
+								<input type="hidden" name="prod_id" value="{{ product.id }}" id="prod_id">
+								<button type="submit" class="btn btn-primary shadow px-5 py-2">Add to Cart</button>
+							</form>    
+							{% endif %}
+							
+						</div>
+						<div class="col sm-2">
+							<a href="/shop/products/{{product.id}}"><button id="qv{{product.id}}" class="btn btn-primary mt-2 shadow px-5 py-2">Quick View</button></a>
+					  	</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock body %}
+
+{% block js %}
+
+{% endblock js %}
+
+{% block link_js %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+{% endblock link_js %}
+
+{% block heroSection %}{% endblock heroSection %}
+
+{% block WhyChooseUs %}{% endblock WhyChooseUs %}
+
+{% block HelpSection %}{% endblock HelpSection %}
+
+{% block productSection %}{% endblock productSection %}
+
+{% block popularProduct %}{% endblock popularProduct %}
+
+{% block blogSection %}{% endblock blogSection %}
+
+{% block testimonial %}{% endblock testimonial %}

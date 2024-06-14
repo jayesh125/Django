@@ -1,0 +1,303 @@
+{% extends "main/base.html" %}
+
+{% block head %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock title %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
+{% endblock head %}
+
+{% block css %}
+    #sidebar {
+        display: flex;
+        flex-direction: column;
+        min-width: 250px;
+        max-width: 250px;
+        transition: all 0.3s;
+        background-color: #001021;
+    }
+    #sidebar.collapsed {
+        min-width: 80px;
+        max-width: 80px;
+    }
+    #sidebar .sidebar-header,
+    #sidebar .footer {
+        text-align: center;
+        flex-shrink: 0;
+    }
+    #sidebar .sidebar-links {
+        flex-grow: 1;
+        overflow-y: auto;
+    }
+    #sidebar .sidebar-links .nav-link {
+        white-space: nowrap;
+    }
+    #sidebar.collapsed .nav-link span {
+        display: none;
+    }
+    #sidebar.collapsed .h2 span {
+        display: none;
+    }
+    #sidebar.collapsed .nav-link i {
+        margin-right: 0;
+    }
+    #content-wrapper1 {
+        display: flex;
+        flex-grow: 1;
+        overflow: hidden;
+    }
+    #content1 {
+        flex-grow: 1;
+        overflow-y: auto;
+        padding: 20px;
+        transition: margin-left 0.3s;
+    }
+    #sidebar.collapsed + #content-wrapper1 #content1 {
+        margin-left: 80px;
+    }
+    .toggle-btn {
+        position: absolute;
+        top: 50%;
+        left: 230px;
+        z-index: 2000;
+        padding: 0.5rem;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: white;
+        border-width: 2px;
+        border-style: solid;
+        border-color: dark;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    #sidebar.collapsed ~ .toggle-btn {
+        left: 60px;
+        transform: rotate(180deg);
+    }
+    .navbar-light {
+        background-color: #001021;
+    }
+
+    /* Button styling */
+    .btn-primary {
+        background: #03045E;
+        border-color: #287328;
+    }
+    .btn:hover {
+        color: black;
+    }
+    .btn-primary:hover {
+        background: #EDF6F9;
+    }
+    .btn-danger {
+        background: rgb(195,34,34);
+        background: radial-gradient(circle, rgba(195,34,34,1) 0%, rgba(166,11,11,1) 100%);
+        border-color: #ffffff;
+    }
+    .btn-danger:hover {
+        background: rgb(195,34,34);
+        background: radial-gradient(circle, rgba(195,34,34,1) 0%, rgba(255,0,0,1) 100%);
+        border-color: #ffffff;
+    }
+    #verify .dropdown-menu {
+        position: absolute;
+        top: 0;
+        left: 100%;
+        min-width: 200px;
+        z-index: 1000;
+    }
+    #verify .sidebar-links .dropdown-menu {
+        top: 0;
+        left: calc(100% - 1px);
+        border-radius: 0;
+    }
+    .ml-auto, .mx-auto {
+        margin-left: initial !important;
+    }
+    .container1 {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    h1, h2 {
+        text-align: center;
+    }
+    
+    .card {
+        background-color: #f8f8f8;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin: 20px;
+        padding: 20px;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    
+    .card-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+    
+    .card h3 {
+        margin-top: 0;
+    }
+    
+    .card p {
+        color: #555;
+    }
+
+    .profile-picture {
+        height: 100px;
+        width: 100px;
+        border-radius: 50%;
+        margin-bottom: 10px;
+    }
+{% endblock css %}
+
+{% block content %}{% endblock content %}
+{% block navbar %}
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
+        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a href="{% url 'admin_dash' %}" class="nav-link">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a href={% url "adminindex" %} class="nav-link active">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href={% url "aboutA" %} class="nav-link">About</a>
+                </li>
+                {% block recruitment %}
+                <li class="nav-item">
+                    <a href={% url "recruitmentA" %} class="nav-link">Recruitment</a>
+                </li>
+                {% endblock recruitment %}
+                <li class="nav-item">
+                    <a href={% url "teamA" %} class="nav-link">Our Team</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href={% url "coursesA" %} class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Courses</a>
+                    <div class="dropdown-menu fade-down m-0">
+                        <a href="team.html" class="dropdown-item">Master Programs</a>
+                        <a href="testimonial.html" class="dropdown-item">PG Diploma Programs</a>
+                        <a href="404.html" class="dropdown-item">Research Center</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href={% url "iqacA" %} class="nav-link">IQAC</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                    <div class="dropdown-menu fade-down m-0">
+                        <a href="team.html" class="dropdown-item">Our Team</a>
+                        <a href="testimonial.html" class="dropdown-item">Testimonial</a>
+                        <a href="404.html" class="dropdown-item">404 Page</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href={% url "contactA" %} class="nav-link">Contact</a>
+                </li>
+            </ul>
+        </div>
+        <div id="signupButtonContainer">
+            {% if user.is_authenticated %}
+                <!-- If user is authenticated, display welcome message and dropdown -->
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Welcome, {{ user.username }}
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="userDropdown">
+                        <a class="dropdown-item" href="#">Profile</a>
+                        <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                    </div>
+                </div>
+            {% else %}
+                <!-- If user is not authenticated, display sign-up button -->
+                <button type="button" class="btn btn-primary py-2 px-lg-2" data-bs-toggle="modal" data-bs-target="#userTypeModal">
+                    Sign Up Now<i class="fa fa-arrow-right ms-3"></i>
+                </button>
+                
+                <a href={% url "signin" %}>
+                    <button type="button" class="btn btn-primary py-2 px-lg-2">
+                        Log In Now<i class="fa fa-arrow-right ms-3"></i>
+                    </button>
+                </a>
+            {% endif %}
+        </div>                
+    </nav>
+
+    <!-- Navbar End -->
+{% endblock navbar %}
+
+{% block body %}
+    {% load static %}
+    
+    <div id="content-wrapper1">
+        <div id="sidebar" class="text-white">
+            <div class="sidebar-links">
+                <nav class="nav flex-column">
+                    {% for course in courses %}
+                        <div class="nav-item">
+                            <a href="{{ course.get_absolute_url }}" class="nav-link text-white h5">
+                                <i class="lni lni-book"></i>
+                                <span>{{ course.short_name }}</span>
+                            </a>
+                            {% if course.specializations.exists %}
+                                <div class="dropdown">
+                                    <button class="btn btn-success dropdown-toggle nav-link text-white" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <span>Specializations</span>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        {% for specialization in course.specializations.all %}
+                                            <li><a class="dropdown-item" href="{{ specialization.get_absolute_url }}">{{ specialization.name }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </nav>
+            </div>
+            <div class="footer mt-auto py-3">
+                <small>&copy; 2024 I.M.R.T</small>
+            </div>
+        </div>
+    
+        <button id="toggle-btn" class="toggle-btn"><img src="{% static 'caret-right-square-fill.svg' %}" alt=""></button>
+    
+        <div id="content1">
+            {% block maincontent %}{% endblock maincontent %}
+        </div>
+    </div>
+    
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    
+    <script>
+        $(document).ready(function () {
+            $('#toggle-btn').on('click', function () {
+                $('#sidebar').toggleClass('collapsed');
+                $('#content1').toggleClass('ml-auto');
+                $(this).toggleClass('collapsed');
+            });
+        });
+    </script>
+    {% block js %}{% endblock js %}
+{% endblock body %}

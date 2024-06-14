@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{% block title %}Shopping Cart{% endblock title %}
+
+{% block css %}
+    
+{% endblock css %}
+
+{% block body %}
+    <div class="container my-5">
+        {% if messages %}
+            {% for message in messages %}
+                <p {% if message.tags %} class="alert alert-{{message.tags}} mb-5" {% endif %}>{{message}}</p>
+            {% endfor %}
+        {% endif %}
+        <div class="row">
+            <h1 class="text-center mb-5">Shopping Cart</h1>
+            <div class="col-sm-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h3>Cart Items</h3>
+                        {% for cart in carts %}
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3 text-center align-self-center">
+                                    <img src="{{ cart.product.product_image.url }}" alt="{{ cart.product.title }}" class="img-fluid img-thumbnail shadow-sm" height="150" width="150">
+                                </div>
+                                <div class="col-sm-9">
+                                    <div>
+                                        <h5>{{ cart.product.title | truncatechars:45 }}</h5>
+                                        <p class="mb-2 text-muted small">{{ cart.product.description|truncatechars:60 }}</p>
+                                        <div class="my-3">
+                                            <label for="quantity">Quantity:</label>
+                                            <a class="minus-cart btn" pid="{{ cart.product.id }}"><i class="fas fa-minus-square fa-lg"></i></a>
+                                            <span id="quantity">{{ cart.quantity }}</span>
+                                            <a class="plus-cart btn" pid="{{ cart.product.id }}"><i class="fas fa-plus-square fa-lg"></i></a>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <a class="btn btn-sm btn-secondary mr-3 remove-cart" pid="{{ cart.product.id }}">Remove item</a>
+                                            <p class="mb-0"><span><strong>Rs. {{ cart.product.discounted_price }}</strong></span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h3>The Total Amount</h3>
+                        <ul class="list-group">
+                            <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">Amount<span>Rs. <span id="amount">{{ amount|floatformat:2 }}</span></span></li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0">Shipping<span>Rs. 70.00</span></li>
+                            <hr>
+                            <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+                                <div>
+                                    <strong>Total (including VAT)</strong>
+                                </div>
+                                <span id= "totalamount"><strong>Rs. {{ totalamount|floatformat:2 }}</strong></span>
+                            </li>
+                        </ul>
+                        <div class="d-grid">
+                            <a href="#" onclick="placeOrder()" class="btn btn-danger fw-bold">Place Order</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock body %}
+
+{% block js %}
+$(document).ready(function() 
+{
+    console.log("Selected element #amount:", document.getElementById("amount"));
+    console.log("Selected element #totalamount:", document.getElementById("totalamount"));
+
+    $('.plus-cart').click(function () {
+        var id = $(this).attr("pid").toString();
+        var eml = $(this).parent().find("#quantity");
+        $.ajax({
+            type: "GET",
+            url: "/modify_cart/plus/",
+            data: { prod_id: id },
+            success: function (data) {
+                console.log(data);
+                eml.text(data.quantity);
+                $("#totalamount").text("Rs. " + data.totalamount.toFixed(2));
+                $("#amount").text("Rs. " + data.amount.toFixed(2));
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+            }
+        });
+    });
+
+    $('.minus-cart').click(function () {
+        var id = $(this).attr("pid").toString();
+        var eml = $(this).parent().find("#quantity");
+        var elm = this;
+        $.ajax({
+            type: "GET",
+            url: "/modify_cart/minus/",
+            data: { prod_id: id },
+            success: function (data) {
+                console.log(data);
+                if (data.deleted) {
+                    // If item is deleted, remove its parent row from the cart UI
+                    $(elm).closest(".row").remove();
+                } else {
+                    // Update quantity, total amount, and amount
+                    eml.text(data.quantity);
+                    $("#totalamount").text("Rs. " + data.totalamount.toFixed(2));
+                    $("#amount").text("Rs. " + data.amount.toFixed(2));
+                }
+    
+                // Check if cart is empty and redirect if necessary
+                checkCartAndRedirect();
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+            }
+        });
+    });
+    
+    $('.remove-cart').click(function () {
+        var id = $(this).attr("pid").toString();
+        var elm = this;
+        $.ajax({
+            type: "GET",
+            url: "/removecart/",
+            data: { prod_id: id },
+            success: function (data) {
+                console.log(data);
+                $("#totalamount").text("Rs. " + data.totalamount.toFixed(2));
+                $("#amount").text("Rs. " + data.amount.toFixed(2));
+                $(elm).closest(".row").remove();
+    
+                // Check if cart is empty and redirect if necessary
+                checkCartAndRedirect();
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+            }
+        });
+    });
+});
+
+function checkCartAndRedirect() {
+    var totalItems = parseInt("{{ totalitem }}");
+    if (totalItems <= 0) {
+        // Redirect to the empty cart page
+        window.location.href = "{% url 'emptycart' %}"; // Replace 'emptycart' with your actual URL
+    }
+}
+
+function placeOrder() {
+    // Check if the cart is empty by inspecting the total number of items
+    var totalItems = parseInt("{{ totalitem }}");
+    
+    if (totalItems <= 0) {
+        // If cart is empty, display a popup message
+        alert("Your cart is empty. Please add items to your cart before placing an order.");
+        
+        // Redirect to the shop page
+        window.location.href = "{% url 'shop' %}"; // Replace 'shop' with your actual URL
+    } else {
+        // If the cart is not empty, proceed with placing the order
+        window.location.href = "{% url 'checkout' %}"; // Replace 'checkout' with your actual URL
+    }
+}
+
+{% endblock js %}
+
+{% block WhyChooseUs %}{% endblock WhyChooseUs %}
+
+{% block HelpSection %}{% endblock HelpSection %}
+
+{% block productSection %}{% endblock productSection %}
+
+{% block popularProduct %}{% endblock popularProduct %}
+
+{% block heroSection %}{% endblock heroSection %}

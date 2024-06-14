@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block head %}
+
+    <!-- Add your head content here -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+ 
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <!-- Include Bootstrap CSS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    
+    {% endblock head %}
+
+{% block css %}
+    <!-- Add your CSS styles here -->
+    .btn .btn-primary {
+        background: #3b5d50;
+        border-color: #3b5d50;
+        margin-top: 10px;
+    }
+
+    a {
+        -webkit-transition: .3s all ease;
+        -o-transition: .3s all ease;
+        transition: .3s all ease;
+        color: #3b5d50; 
+    }
+
+    #offerCarousel {
+        width: 100%; /* Adjust as needed */
+        height: 400px; /* Adjust as needed */
+    }
+
+    .carousel-item img {
+        width: 100%;
+        height: 400px;
+        object-fit: contain;
+    }
+
+    .carousel-btn{
+        height: 100px;
+        width: 100px;
+        align-items: center;
+        align-self: center;
+    }
+
+    .ftco-section {
+        padding: 2em 0; 
+    }
+
+    .one-line {
+        overflow: hidden; /* Hide any overflow text */
+        text-overflow: ellipsis; /* Add an ellipsis (...) to indicate truncated text */
+        white-space: nowrap; /* Prevent the product name from wrapping */
+    }
+    
+    .two-line {
+        overflow: hidden; /* Hide any overflow text */
+        display: -webkit-box; /* Use the old WebKit box layout model */
+        -webkit-line-clamp: 2; /* Limit the number of lines to display */
+        -webkit-box-orient: vertical; /* Set the layout orientation to vertical */
+    }
+    
+{% endblock css %}
+
+{% block heroSection %}
+    <!-- Hero section with offer carousel -->
+    {% load static %}
+    <div id="offerCarousel" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+            <li data-target="#offerCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#offerCarousel" data-slide-to="1"></li>
+            <li data-target="#offerCarousel" data-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img class="d-block w-100" src="{% static 'images/carwashHome.png' %}" alt="First slide">
+            </div>
+            <div class="carousel-item">
+                <img class="d-block w-100" src="{% static 'images/carwashHome.png' %}" alt="Second slide">
+            </div>
+            <div class="carousel-item">
+                <img class="d-block w-100" src="{% static 'images/carwashHome.png' %}" alt="Third slide">
+            </div>
+        </div>
+        <a class="carousel-control-prev" href="#offerCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#offerCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+    
+{% endblock heroSection %}
+
+{% block productSection %}
+
+<!-- Start products Slider -->
+<div class="testimonial-section m-0 p-0">
+    <div class="container">
+        {% for products, ranges, nSlides in allProds %}
+        <div class="row">
+            <div class="col-lg-12 mx-auto text-center">
+                <h2 class="section-title mt-2">Flash Sale</h2>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div id="carouselExampleControls{{ forloop.counter }}" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        {% for product_set in products %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            <div class="row">
+                                {% for product in product_set %}
+                                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                    <div class="card align-items-center" style="width: 18rem;">
+                                        <img src="{{ product.product_image.url }}" class="card-img-top" alt="..." style="height : 220px">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ product.title|truncatechars:20 }}</h5>
+                                            <p class="card-text">{{ product.description|truncatechars:50 }}</p>
+                                            <h7 class="card-title">Rs. {{product.discounted_price}} <small class="fw-light text-decoration-line-through">{{product.selling_price}}</small></h7>
+                                            <!-- Add to Cart button and QuickView button -->
+                                            <br>
+
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="col sm-2">
+                                                        {% if request.user.is_authenticated %}
+                                                        <form action="{% url 'add-to-cart' %}" class="d-inline" method="GET">
+                                                            <input type="hidden" name="prod_id" value="{{ product.id }}" id="prod_id">
+                                                            <button type="submit" class="btn btn-primary mt-2 shadow px-5 py-2">Add to Cart</button>
+                                                        </form>
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="col sm-2">
+                                                        <a href="/shop/products/{{product.id}}"><button id="qv{{product.id}}" class="btn btn-primary mt-2 shadow px-5 py-2">Quick View</button></a>
+                                                  </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-control-prev btn btn-primary carousel-btn" type="button" data-bs-target="#carouselExampleControls{{ forloop.counter }}" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next btn btn-primary carousel-btn" type="button" data-bs-target="#carouselExampleControls{{ forloop.counter }}" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+    {% endblock productSection %}
+
+{% block HelpSection %}
+    <!-- Add your help section content here -->
+{% endblock HelpSection %}
+
+{% block testimonial %}{% endblock testimonial %}
+{% block body %}
+
+{% endblock body %}

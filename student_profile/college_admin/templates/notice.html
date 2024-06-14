@@ -1,0 +1,57 @@
+{% extends "dashbaseadmin.html" %}
+
+{% block css %}
+
+<style>
+    .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+    .form-container h2 {
+        text-align: center;
+    }
+    .form-container form {
+        display: flex;
+        flex-direction: column;
+    }
+    .form-container form button {
+        align-self: center;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .form-container form button:hover {
+        background-color: #0056b3;
+    }
+    </style>
+    
+
+{% endblock css %}
+{% block maincontent %}
+<div class="form-container">
+    <h2>Send a Message</h2>
+
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Send</button>
+      </form>
+</div>
+{% endblock maincontent %}

@@ -1,0 +1,45 @@
+{% extends "main/basesign.html" %}
+
+{% block heading %}Sign In{% endblock heading %}
+{% block form %}
+<form action="" method="POST">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label class="form-label">Email Address</label>
+        <input class="form-control" name="username" placeholder="Enter email-address">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input class="form-control" type="password" name="password" placeholder="Enter password">
+    </div>
+    <a href="{% url 'password_reset' %}"><i>Forgot Password?</i></a>
+
+    <button class="btn btn-primary" style="width:100%">Login to your account</button>
+    <p>Don't have an account? 
+        <a href="#" class="" data-bs-toggle="modal" data-bs-target="#userTypeModal">
+            Sign Up Now<i class="fa fa-arrow-right ms-3"></i>
+        </a>
+    </p>
+
+    <div class="modal fade" id="userTypeModal" tabindex="-1" aria-labelledby="userTypeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userTypeModalLabel">Select User Type</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you a student, visitor, or a faculty member?</p>
+                    <a href="{% url 'signupstudent' %}" class="btn btn-primary">Student</a>
+                    <a href="{% url 'signup' %}" class="btn btn-primary">Visitor</a>
+                    <a href="{% url 'signupfaculty' %}" class="btn btn-primary">Faculty</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Add Forgot Password link below the login button -->
+</form>
+
+
+{% endblock form %}

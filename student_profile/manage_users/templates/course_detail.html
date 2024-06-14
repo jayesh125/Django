@@ -1,0 +1,38 @@
+{% extends "recruitmentbase.html" %}
+
+{% block carousel %}{% endblock carousel %}
+
+{% block maincontent %}
+    <h1>{{ course.name }}</h1>
+    
+    <h2>Students Enrolled</h2>
+    <div class="row">
+        {% for student in students %}
+        <div class="col-md-4">
+            <a href="{% url 'student_detail' student.user.username %}">
+                <div class="card student-card">
+                    <div class="card-body">
+                        {% for personal_info in student.personal_info.all %}
+                        {{ personal_info.profile_picture.url }}
+                            {% if personal_info.profile_picture %}
+                                <img src="{{ personal_info.profile_picture.url }}" alt="Profile Picture" class="profile-picture animate__animated animate__fadeIn">
+                            {% endif %}
+                        {% endfor %}
+                        <h5 class="card-title">{{ student.user.username }}</h5>
+                        <p class="card-text">{{ student.user.email }}</p>
+                    </div>
+                </div>
+            </a>            
+        </div>
+        {% endfor %}
+    </div> 
+    
+    {% if course.specializations.exists %}
+        <h2>Specializations</h2>
+        <ul>
+            {% for specialization in course.specializations.all %}
+                <li><a href="{{ specialization.get_absolute_url }}">{{ specialization.name }}</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

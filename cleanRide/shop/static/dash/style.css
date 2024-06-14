@@ -1,0 +1,264 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  background-color: #e4e3e8;
+  padding: 0.375rem;
+  font-family: Poppins, sans-serif;
+  position: relative;
+}
+
+button,
+a {
+  all: unset;
+  font: inherit;
+  cursor: pointer;
+}
+
+nav {
+  position: fixed;
+  width: 5rem;
+  height: calc(100vh - 0.75rem);
+  background-color: #ffffff;
+  padding: 1rem 0.75rem;
+  border-radius: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  transition: width 500ms ease;
+  z-index: 1000;
+}
+
+body.active nav {
+  width: 15rem;
+}
+
+.sidebar-header,
+.sidebar-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.sidebar-header {
+  margin-bottom: 1.5rem;
+}
+
+.logo-wrapper {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 1.25rem;
+}
+.logo-wrapper > img {
+  width: 3.25rem;
+  height: 3.25rem;
+  background-color: #f4f4f6;
+  padding: 0.4rem;
+  border-radius: 0.5rem;
+}
+
+.sidebar-links {
+  flex-direction: column;
+  margin-bottom: auto;
+  gap: 0.6rem;
+  padding-top: 1.5rem;
+}
+nav > .sidebar-links {
+  border-top: 1px solid rgb(211, 211, 211);
+}
+
+body.active .sidebar-links,
+body.active .sidebar-header,
+body.active .user-profile {
+  justify-content: start;
+  align-items: stretch;
+}
+
+.link {
+  display: flex;
+  padding: 0.6rem;
+  border-radius: 0.5rem;
+  gap: 1.5rem;
+}
+.hidden {
+  display: none;
+}
+body.active .hidden {
+  display: inline;
+}
+
+.link:hover,
+.link.active:hover {
+  background-color: #e4e4e8;
+}
+.link.active {
+  background-color: #f4f4f6;
+}
+
+.link > img {
+  width: 24px;
+  height: 24px;
+}
+
+.sidebar-bottom .sidebar-links {
+  padding-bottom: 1.5rem;
+}
+
+.toggle-btn {
+  position: absolute;
+  top: 15rem;
+  right: -15px;
+  padding: 0.5rem;
+  background-color: #c7c7c7;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.25s ease;
+}
+
+body.active .toggle-btn {
+  transform: rotate(180deg);
+}
+
+.user-profile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgb(211, 211, 211);
+}
+
+.user-avatar {
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
+  transition: scale 0.2s ease;
+}
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.user-avatar:hover {
+  scale: 1.1;
+}
+
+.user-details {
+  align-self: center;
+  overflow: hidden;
+}
+.user-details .username {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.user-details .user-email {
+  font-size: 0.8rem;
+}
+
+navbar {
+  position: fixed;
+  display: flex;
+  justify-content: flex-end; /* Align items horizontally to the end */
+  align-items: center; /* Align items vertically */
+  padding: 0.75rem 1rem 0rem 1rem;
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  width: calc(100vw - 0.75rem); /* Adjusted width */
+  height: 5rem; /* Adjusted height */
+  transition: width 0.5s ease;
+  margin-left: 1rem;
+  margin-right: 3rem;
+  z-index: 500;
+}
+
+.navbar.collapsed {
+  width: calc(100vw - 13rem); /* Adjusted width when sidebar is collapsed */
+}
+
+.navbar-item {
+  list-style-type: none; /* Remove default list styles */
+  margin-left: 1rem; /* Adjust spacing between navbar items */
+}
+
+.navbar-link {
+  text-decoration: none;
+  color: #000000;
+}
+
+.navbar-link.active {
+  font-weight: bold;
+}
+
+.navbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-left: 1rem;
+  margin-right: 6rem;
+}
+
+.navbar-item {
+  margin-left: 1rem;
+}
+
+.navbar-link {
+  text-decoration: none;
+  color: #000000;
+}
+
+.col {
+  display: flex;
+}
+
+.col-md-4 {
+  flex: 0 0 auto; /* Sidebar width won't change */
+}
+
+.subtitle-container {
+  display: flex; /* Use flexbox layout */
+  align-items: center; /* Align items vertically */
+}
+
+.subtitle-container img {
+  margin-right: 5px; /* Add space between the image and the text */
+}
+
+.btn-primary {
+  background-color: #04AA6D; /* Green */
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration-color: #04AA6D;
+  display: inline-block;
+  font-size: 16px;
+  margin: 10px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: white; 
+  color: black; 
+  border: 2px solid #04AA6D;
+  border-radius: 12px;
+  padding: 0.5rem;
+}
+
+.btn-primary:hover {
+  background-color: #04AA6D;
+  border: 2px solid #04AA6D;
+  color: white;
+}

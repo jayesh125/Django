@@ -1,0 +1,133 @@
+{% extends "dashbasefaculty.html" %}
+
+{% block title %} Dashboard {% endblock title %}
+
+{% block css %}
+<style>
+  .ml-auto, .mx-auto {
+    margin-left: initial !important; /* Reset margin-left */
+  }
+</style>
+{% endblock css %}
+
+{% block main %}
+
+{% block maincontent %}
+
+<div class="container m-2">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card m-2 fadeIn">
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ user.first_name }} {{ user.last_name }}</h5>
+                    <p class="card-text">Email: {{ user.email }}</p>
+                    {% if personal_info %}
+                        {% if personal_info.profile_picture %}
+                            <img src="{{ personal_info.profile_picture.url }}" alt="Profile Picture" class="rounded-circle img-fluid" style="max-width: 200px;">
+                        {% else %}
+                            <p>No profile picture available</p>
+                        {% endif %}
+                        <a href="{% url 'form_view_faculty' tab='personal' %}" class="btn btn-primary mt-3">Edit Profile</a>
+                    {% else %}
+                        <p>No personal information available</p>
+                        <a href="{% url 'form_view_faculty' tab='personal' %}" class="btn btn-primary mt-3">Create Profile</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card m-2 fadeIn">
+                <div class="card-body">
+                    <h5 class="card-title">Add Information</h5>
+                    <div class="row">
+                    
+                        <div class="col-md-6">
+                            <a href="{% url 'form_view_faculty' tab='skills' %}" class="btn btn-primary btn-block mb-2">
+                                <i class="lni lni-cog mr-2"></i> Skills
+                            </a>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <a href="{% url 'form_view_faculty' tab='interests' %}" class="btn btn-primary btn-block mb-2">
+                                <i class="lni lni-heart mr-2"></i> Interests
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{% url 'form_view_faculty' tab='languages' %}" class="btn btn-primary btn-block mb-2">
+                                <i class="lni lni-spellcheck mr-2"></i> Languages
+                            </a>
+                        </div>
+
+                        <div class="col-md-12">
+                            <a href="{% url 'form_view_faculty' tab='achievements' %}" class="btn btn-primary btn-block mb-2">
+                                <i class="lni lni-star-half mr-2"></i> Achievements
+                            </a>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-8">
+            <div class="card m-2 fadeIn">
+                <div class="card-body">
+                    <h5 class="card-title">Profile Completion</h5>
+                    <!-- Display experience information -->
+                    <ul class="list-group">
+                        <canvas id="profileCompletionChart" width="200" height="200"></canvas>
+                    </ul>
+                </div>
+            </div>           
+
+            <div class="card m-2 fadeIn">
+                <div class="card-body">
+                    <h5 class="card-title">Profile Completion</h5>
+                    <!-- Display experience information -->
+                    <ul class="list-group">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: {{ completion_percentage|floatformat:"2" }}%;" aria-valuenow="{{ completion_percentage|floatformat:"2" }}" aria-valuemin="0" aria-valuemax="100">{{ completion_percentage|floatformat:"2" }}%</div>
+                        </div>
+                        <p class="mt-2">Your profile completion</p>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock maincontent %}
+{% endblock main %}
+
+{% block js %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    var ctx = document.getElementById('profileCompletionChart').getContext('2d');
+    var completionPercentage = {{ completion_percentage }};
+
+    var profileCompletionChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Completed', 'Remaining'],
+            datasets: [{
+                data: [completionPercentage, 100 - completionPercentage],
+                backgroundColor: [
+                    '#009000',
+                    '#FF0800'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: false, // Adjust as needed
+            cutoutPercentage: 80, // Adjust the size of the hole in the center
+            legend: {
+                display: false
+            }
+        }
+    });
+</script>
+
+{% endblock js %}

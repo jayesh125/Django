@@ -1,0 +1,120 @@
+{% extends "dashbaseadmin.html" %}
+
+{% block title %}Analysis{% endblock title %}
+
+{% block css %}
+<!-- Add any custom CSS here if needed -->
+<style>
+  .stats {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+  }
+  .stats div {
+    text-align: center;
+    padding: 10px;
+  }
+  .chart-container {
+    width: 80%;
+    margin: auto;
+  }
+</style>
+{% endblock css %}
+
+{% block maincontent %}
+<div class="stats">
+  <div>
+    <h3>Verified Students</h3>
+    <p>{{ verified_students }}</p>
+  </div>
+  <div>
+    <h3>Enrolled Students</h3>
+    <p>{{ enrolled_students }}</p>
+  </div>
+  <div>
+    <h3>Faculties</h3>
+    <p>{{ faculties }}</p>
+  </div>
+</div>
+
+<div class="row mb-4">
+  <div class="col-md-6">
+      <div class="card fadeIn">
+          <div class="card-body">
+              <h5 class="card-title">Enrollment Statistics</h5>
+              <canvas id="enrollmentChart"></canvas>
+          </div>
+      </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card fadeIn message-container">
+        <div class="card-body">
+            <canvas id="combinedStatusChart" width="400" height="400"></canvas>
+        </div>
+    </div>
+</div>
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('enrollmentChart').getContext('2d');
+    const enrollmentChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: {{ enrollment_statuses|safe }},
+        datasets: [{
+          label: '# of Students',
+          data: {{ enrollment_counts|safe }},
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+      var ctx = document.getElementById('combinedStatusChart').getContext('2d');
+      var chart = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+              labels: {{ statuses|safe }},
+              datasets: [{
+                  data: {{ counts|safe }},
+                  backgroundColor: [
+                      'rgba(255, 99, 132, 0.5)',
+                      'rgba(54, 162, 235, 0.5)',
+                      'rgba(255, 206, 86, 0.5)',
+                      'rgba(75, 192, 192, 0.5)',
+                      'rgba(153, 102, 255, 0.5)',
+                  ],
+                  borderColor: [
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(54, 162, 235, 1)',
+                      'rgba(255, 206, 86, 1)',
+                      'rgba(75, 192, 192, 1)',
+                      'rgba(153, 102, 255, 1)',
+                  ],
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              responsive: true,
+              maintainAspectRatio: false
+          }
+      });
+  });
+</script>
+{% endblock maincontent %}
